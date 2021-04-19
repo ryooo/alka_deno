@@ -5,8 +5,9 @@ import PlainLogo from '~/components/plain-logo.tsx'
 
 const thisYear = (new Date).getFullYear()
 const title = 'alka'
-const about = 'こどものためのさいと'
+const about = '声で学べる知育サイト'
 const keywords = [
+  '音声',
   '知育',
   '教育',
   '学習',
@@ -39,9 +40,11 @@ export default function Home() {
       </head>
       <div className="fullscreen-page">
         <Logo fallback={<PlainLogo />} />
-        <h1>勉強ゲーム alka</h1>
-        <p className="intro"><strong>alka</strong>は楽しくわかりやすく勉強をするためのゲームです。</p>
-        <p className="intro short">ゲーム感覚で勉強をすすめることで、どんどん身につけましょう</p>
+
+        <h1><ruby data-ruby="こえ">声</ruby>で<ruby data-ruby="まな">学</ruby>べる<ruby data-ruby="べんきょう">勉強</ruby>サイト<ruby data-ruby="あるか">alka</ruby></h1>
+        <p className="intro"><strong>alka</strong>は<ruby data-ruby="こえ">声</ruby>を<ruby data-ruby="つか">使</ruby>って<ruby data-ruby="たの">楽</ruby>しくわかりやすく<ruby data-ruby="べんきょう">勉強</ruby>をするためのサイトです。</p>
+        <p className="intro"><ruby data-ruby="にがて">苦手</ruby>なところはalkaが<ruby data-ruby="おぼ">覚</ruby>えてくれます。<ruby data-ruby="こうかてき">効果的</ruby>に<ruby data-ruby="ふくしゅう">復習</ruby>しましょう。</p>
+
         <div className="buttons">
           <a href="/docs/parents">
             <Button strong>おとうさん・おかあさんへ</Button>

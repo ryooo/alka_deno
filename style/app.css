@@ -68,6 +68,7 @@ em, i {
     letter-spacing: -1.5px;
     text-align: center;
     color: #111;
+    margin-top: 35px;
 
     @media screen and (max-width: 660px)  and (min-width: 480px) {
       font-size: 30px;
@@ -80,7 +81,7 @@ em, i {
   .intro {
     width: 90%;
     max-width: 600px;
-    margin-top: 6px;
+    margin-top: 25px;
     line-height: 1.27;
     font-size: 15px;
     text-align: center;
@@ -129,4 +130,30 @@ em, i {
       }
     }
   }
+}
+
+
+ruby[data-ruby]
+{
+	position: relative;
+}
+ruby[data-ruby]::before
+{
+	content: attr(data-ruby);
+	position: absolute;
+	line-height: 100%;
+	text-align: center;
+	left: -2em;
+	right: -2em;
+	transform-origin: bottom center;
+	/* ルビの文字サイズを親文字に対する比率で指定 */
+	transform: scale(0.5);
+	/* 100%を越える部分が親文字とルビとのスペースになる。単位は親文字に対する比率 */
+	bottom: 105%;
+	/* デバッグ用 */
+	/* background-color: rgba(255, 0, 0, 0.2); */
+}
+ruby[data-ruby] rt
+{
+	display: none;
 }
