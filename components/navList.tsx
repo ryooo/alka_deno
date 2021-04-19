@@ -1,5 +1,6 @@
 import { useRouter } from 'framework/react'
 import React, { Fragment, useState } from 'react'
+import util from 'https://deno.land/x/aleph@v0.3.0-alpha.30/shared/util.ts'
 
 const navMenu = [
   {
@@ -80,4 +81,24 @@ export default function NavList({
       ))}
     </>
   )
+}
+
+export const getTitle = (url: string): string => {
+  const path = util.trimSuffix(util.trimPrefix(url, "/pages"), ".tsx")
+  const searchInItem = (items, basePath = "", breadCrumb = []) => {
+    return items.map((item) => {
+      const itemFullPath = basePath + item.pathname
+      if (path == itemFullPath) {
+        return breadCrumb.concat(item.title)
+      } else if (path.startsWith(itemFullPath)) {
+        if (item.submenu != undefined) {
+          return searchInItem(item.submenu, itemFullPath, breadCrumb.concat(item.title))
+        }
+      }
+    }).filter((e) => { return e })
+  }
+  const breadCrumb = navMenu.map(section => {
+    return [section.name].concat(searchInItem(section.items))
+  })
+  return breadCrumb.flat(10).join(" - ")
 }

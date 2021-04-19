@@ -1,4 +1,5 @@
 import React from 'react'
+import { getTitle } from '~/components/navList.tsx'
 
 export default function PageMainContents(props) {
     return (
@@ -7,5 +8,5 @@ export default function PageMainContents(props) {
 }
 
 PageMainContents.meta = {
-    title: "1ねんせい かず"
+    title: getTitle(import.meta.url),
 }
