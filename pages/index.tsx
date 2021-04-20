@@ -47,10 +47,10 @@ export default function Home() {
 
         <div className="buttons">
           <a href="/docs/parents">
-            <Button strong>おとうさん・おかあさんへ</Button>
+            <Button strong ruby>お<ruby data-ruby="とう">父</ruby>さん・お<ruby data-ruby="かあ">母</ruby>さんへ</Button>
           </a>
           <a href="/docs/elementary_1">
-            <Button strong>べんきょうする</Button>
+            <Button strong ruby><ruby data-ruby="べんきょう">勉強</ruby>する</Button>
           </a>
         </div>
       </div>

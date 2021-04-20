@@ -7,6 +7,7 @@ export default function Button({
   color,
   compact,
   strong,
+  ruby,
   disabled,
   activated,
   round,
@@ -21,6 +22,7 @@ export default function Button({
   color?: string,
   compact?: boolean,
   strong?: boolean,
+  ruby?: boolean,
   disabled?: boolean,
   activated?: boolean,
   round?: boolean,
@@ -63,6 +65,9 @@ export default function Button({
     if (strong) {
       css.borderWidth = '2px'
       css.fontWeight = 600
+    }
+    if (ruby) {
+      css.paddingTop = '0.4em'
     }
     if (width) {
       css.width = width

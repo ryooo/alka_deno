@@ -17,6 +17,6 @@
 	// }
 	"ruby html tag": {
 		"prefix": "ru",
-		"body": "$3<span data-ruby=\"$1\">$2</span>$0"
+		"body": "$3<ruby data-ruby=\"$1\">$2</ruby>$0"
 	}
 }
