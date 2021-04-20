@@ -1,6 +1,7 @@
 import { useDeno } from 'framework/react'
 import React, { ComponentType, useEffect } from 'react'
 import Header from './components/header.tsx'
+import 'https://esm.sh/tailwindcss/dist/tailwind.min.css'
 
 export default function App({ Page, pageProps }: { Page: ComponentType<any>, pageProps: any }) {
 
