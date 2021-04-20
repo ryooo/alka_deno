@@ -24,6 +24,8 @@ export default function App({ Page, pageProps }: { Page: ComponentType<any>, pag
   return (
     <main>
       <link rel="stylesheet" href="./style/app.css" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" />
+      <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru&display=swap" rel="stylesheet" />
       <Header />
       <Page {...pageProps} />
     </main>

@@ -1,10 +1,11 @@
-// https://esm.sh/highlightjs@9.16.2/styles/github.css
+/* // https://esm.sh/highlightjs@9.16.2/styles/github.css */
 .hljs{display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable{color:teal}.hljs-doctag,.hljs-string{color:var(--theme-color)}.hljs-section,.hljs-selector-id,.hljs-title{color:var(--theme-color);font-weight:700}.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type{color:#458;font-weight:700}.hljs-attribute,.hljs-name,.hljs-tag{color:teal;font-weight:400}.hljs-link,.hljs-regexp{color:#009926}.hljs-bullet,.hljs-symbol{color:var(--theme-color)}.hljs-built_in,.hljs-builtin-name{color:teal}.hljs-meta{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}
 
 .docs {
   width: 90%;
   max-width: 1200px;
   margin: 0 auto;
+  font-family: 'Kiwi Maru', serif;
 
   @media screen and (max-width: 900px) {
     width: 100%;
@@ -251,15 +252,6 @@
       p {
         margin-top: 1.5rem;
         line-height: 1.5;
-      }
-
-      a {
-        color: var(--theme-color);
-        box-shadow: 0 1px 0 0 currentColor;
-
-        &:hover {
-          box-shadow: none;
-        }
       }
 
       img {
@@ -581,5 +573,78 @@
       cursor: pointer;
       color: #999;
     }
+  }
+
+  .cookies-image {
+    width: 50px;
+    height: 50px;
+    background: url("/cookies.png") no-repeat;
+  }
+  .cookies-image-1 {background-position: 0 0;}
+  .cookies-image-2 {background-position: -50px 0;}
+  .cookies-image-3 {background-position: -100px 0;}
+  .cookies-image-4 {background-position: -150px 0;}
+  .cookies-image-5 {background-position: -200px 0;}
+  .cookies-image-6 {background-position: -250px 0;}
+  .cookies-image-7 {background-position: 0 -50px;}
+  .cookies-image-8 {background-position: -50px -50px;}
+  .cookies-image-9 {background-position: -100px -50px;}
+  .cookies-image-10 {background-position: -150px -50px;}
+  .cookies-image-11 {background-position: -200px -50px;}
+  .cookies-image-12 {background-position: -250px -50px;}
+  .cookies-image-13 {background-position: 0 -100px;}
+  .cookies-image-14 {background-position: -50px -100px;}
+  .cookies-image-15 {background-position: -100px -100px;}
+  .cookies-image-16 {background-position: -150px -100px;}
+  .cookies-image-17 {background-position: -200px -100px;}
+  .cookies-image-18 {background-position: -250px -100px;}
+  .cookies-image-19 {background-position: 0 -150px;}
+  .cookies-image-20 {background-position: -50px -150px;}
+  .cookies-image-21 {background-position: -100px -150px;}
+  .cookies-image-22 {background-position: -150px -150px;}
+  .cookies-image-23 {background-position: -200px -150px;}
+  .cookies-image-24 {background-position: -250px -150px;}
+  .cookies-image-25 {background-position: 0 -200px;}
+  .cookies-image-26 {background-position: -50px -200px;}
+  .cookies-image-27 {background-position: -100px -200px;}
+  .cookies-image-28 {background-position: -150px -200px;}
+  .cookies-image-29 {background-position: -200px -200px;}
+  .cookies-image-30 {background-position: -250px -200px;}
+  .cookies-image-31 {background-position: 0 -250px;}
+  .cookies-image-32 {background-position: -50px -250px;}
+  .cookies-image-33 {background-position: -100px -250px;}
+  .cookies-image-34 {background-position: -150px -250px;}
+  .cookies-image-35 {background-position: -200px -250px;}
+  .cookies-image-36 {background-position: -250px -250px;}
+}
+
+.progress {
+  height: 3px;
+  background: #e4e3e3;
+  border-radius: 0;
+  box-shadow: none;
+  margin-bottom: 30px;
+  overflow: visible;
+
+  .progress-bar {
+    box-shadow: none;
+    position: relative;
+    background: var(--theme-color);
+    height: 3px;
+    width: 100%;
+    transition: width 1000ms 0s linear;
+  }
+
+  .progress-bar:after{
+    content: "";
+    width: 20px;
+    height: 20px;
+    border: 4px solid #fff;
+    position: absolute;
+    top: -8px;
+    right: 4px;
+    transform: rotate(45deg);
+    background: var(--theme-color);
+    outline: 2px solid var(--theme-color);
   }
 }

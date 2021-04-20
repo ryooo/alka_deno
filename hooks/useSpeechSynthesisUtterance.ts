@@ -7,5 +7,6 @@ export const useSpeechSynthesisUtterance = (text: string, callback: () => void):
     u.lang = "ja-JP"
     u.rate = 1.0
     speechSynthesis.speak(u)
+    console.log("speaking: " + text)
     u.addEventListener("end", callback)
 }

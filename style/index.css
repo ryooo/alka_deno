@@ -70,3 +70,29 @@
     }
   }
 }
+
+.buttons {
+  width: 90%;
+  margin-top: 18px;
+  text-align: center;
+
+  a {
+    display: inline-block;
+    margin: 0 6px;
+  }
+
+  @media screen and (max-width: 660px) {
+    a {
+      display: block;
+      margin: 0;
+      margin-top: 9px;
+
+      button {
+        box-sizing: border-box;
+        width: 100%;
+        height: 36px!important;
+        border-radius: 18px!important;
+      }
+    }
+  }
+}
