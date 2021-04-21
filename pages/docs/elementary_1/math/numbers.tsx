@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react'
+import { ld } from 'https://x.nest.land/deno-lodash@1.0.0/mod.ts'
 import { getTitle } from '~/components/navList.tsx'
 import Button from '~/components/button.tsx'
 import TestStart from '~/components/test-start.tsx'
 import { useSpeechSynthesisUtterance } from '~/hooks/useSpeechSynthesisUtterance.ts'
 import BarProgress from '~/components/bar-progress.tsx'
 import ImageContainer from '~/components/image-container.tsx'
-import { ld } from 'https://x.nest.land/deno-lodash@1.0.0/mod.ts'
+import Confetti from '~/components/confetti.tsx'
 
 export default function PageMainContents({
   className
@@ -25,6 +26,7 @@ export default function PageMainContents({
 
   return (
     <div className={className}>
+      <Confetti />
       <div className="cookie-image cookie-image-30"></div>
       {currentQuestion === null && (
         <TestStart
