@@ -632,7 +632,11 @@
     background: var(--theme-color);
     height: 3px;
     width: 100%;
-    transition: width 1000ms 0s linear;
+    transition: width 30ms 0s linear;
+  }
+
+  .transition-off {
+    transition: none;
   }
 
   .progress-bar:after{

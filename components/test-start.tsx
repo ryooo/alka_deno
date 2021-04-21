@@ -4,23 +4,23 @@ import Button from '~/components/button.tsx'
 import { useSpeechSynthesisUtterance } from '~/hooks/useSpeechSynthesisUtterance.ts'
 
 export default function TestStart({
-  contents,
+  description,
   onStart,
 }: {
-  contents: any
+  description: any
   onStart: () => void,
 }) {
   const [showStart, SetShowStart] = useState(false)
   useEffect(() => {
-    const speakText = "aa" //contents.props.children.map((c, i) => { return c.props.children }).join("")
+    const speakText = "aa" //description.props.children.map((c, i) => { return c.props.children }).join("")
     useSpeechSynthesisUtterance(speakText, () => {
       SetShowStart(true)
     })
-  }, [contents])
+  }, [description])
   return (
     <>
       <div className="text-center">
-        {contents}
+        {description}
       </div>
       {showStart && (
         <>

@@ -6,25 +6,34 @@ import { ld } from 'https://x.nest.land/deno-lodash@1.0.0/mod.ts'
 
 export default function BarCountdownTimer({
   limitTime,
-  onFinish
+  onReachLimit,
+  question,
 }: {
   limitTime: number,
-  onFinish: () => void,
+  onReachLimit: () => void,
+  question: any,
 }) {
   const [restSec, setRestSec] = useState(limitTime)
+  const [percent, setPercent] = useState(100)
   useEffect(() => {
     const startAt = Date.now()
     function tick() {
-      setRestSec(limitTime - ((Date.now() - startAt) / 1000))
+      const rest = limitTime - ((Date.now() - startAt) / 1000)
+      setRestSec(rest)
+      setPercent(rest * 100 / limitTime)
+      if (rest <= 0 && typeof onReachLimit === "function") {
+        clearInterval(timerId)
+        onReachLimit()
+      }
     }
-    const timerId = setInterval(tick, 200)
+    const timerId = setInterval(tick, 50)
     return () => clearInterval(timerId)
-  }, [])
+  }, [question])
 
   return (
     <>
       <div className="progress mt-5">
-        <div className="progress-bar" style={{ width: (restSec * 100 / limitTime) + "%" }}></div>
+        <div className={"progress-bar " + (percent > 98 ? "transition-off" : "")} style={{ width: percent + "%" }}></div>
       </div>
     </>
   )
