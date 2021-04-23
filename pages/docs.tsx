@@ -1,23 +1,7 @@
 import { useRouter } from 'framework/react'
 import util from 'aleph/shared/util.ts'
-import hljs from 'highlight'
-import bash from 'highlight-languages/bash'
-import xml from 'highlight-languages/xml'
-import json from 'highlight-languages/json'
-import javascript from 'highlight-languages/javascript'
-import typescript from 'highlight-languages/typescript'
 import React, { ComponentType, Fragment, useEffect, useMemo, useState } from 'react'
 import NavList from '~/components/navList.tsx'
-
-hljs.registerLanguage('javascript', javascript)
-hljs.registerLanguage('typescript', typescript)
-hljs.registerLanguage('json', json)
-hljs.registerLanguage('xml', xml) // depended by jsx
-hljs.registerLanguage('bash', (hljs: any) => {
-  const l = bash(hljs)
-  l.keywords.built_in = 'cd deno aleph'
-  return l
-})
 
 const ogImage = 'https://alephjs.org/twitter_card.jpg'
 const about = 'The Documentation of Aleph.js.'
@@ -77,11 +61,4 @@ export default function Docs({ Page }: { Page?: ComponentType<any> & { meta: Met
       </div>
     </div >
   )
-}
-
-function bashPromptSpan(prompt: string = '$') {
-  const span = document.createElement('span')
-  span.className = 'bash_prompt'
-  span.innerText = prompt + ' '
-  return span
 }

@@ -6,7 +6,7 @@ import TestStart from '~/components/test-start.tsx'
 import { useSpeechSynthesisUtterance } from '~/hooks/useSpeechSynthesisUtterance.ts'
 import BarProgress from '~/components/bar-progress.tsx'
 import ImageContainer from '~/components/image-container.tsx'
-import Confetti from '~/components/confetti.tsx'
+import { ResultCanvas, showConfetti } from '~/components/result_canvas.tsx'
 
 export default function PageMainContents({
   className
@@ -20,14 +20,12 @@ export default function PageMainContents({
   })
   useEffect(() => {
     setQuestions(ld.shuffle(ld.times(10, (n) => {
-      return { num: n, limitTime: 5 }
+      return { num: n, limitTime: 5, id: n }
     })))
   }, [])
 
   return (
     <div className={className}>
-      <Confetti />
-      <div className="cookie-image cookie-image-30"></div>
       {currentQuestion === null && (
         <TestStart
           description={(
@@ -55,28 +53,29 @@ function TestQuestion({
   const [percent, setPercent] = useState(100)
   const [result, setResult] = useState(null)
   useEffect(() => {
-    setResult(null)
     const startAt = Date.now()
     function tick() {
       const rest = question.limitTime - ((Date.now() - startAt) / 1000)
       setPercent(rest * 100 / question.limitTime)
       if (rest <= 0 && typeof showResultAndOnNext === "function") {
         clearInterval(timerId)
-        showResultAndOnNext()
+        showResultAndOnNext(false)
       }
     }
     const timerId = setInterval(tick, 30)
     return () => clearInterval(timerId)
   }, [question])
-  const showResultAndOnNext = useCallback((result) => {
-    setResult(result)
-    setTimeout(() => { onNext() }, 1000)
+  const showResultAndOnNext = useCallback((ret) => {
+    setResult(ret)
+    showConfetti()
+    setTimeout(() => { onNext() }, 500)
   })
   return (
     <>
       <div className="text-center">
         <>
           <BarProgress percent={percent} />
+          <ResultCanvas />
           <div className={percent < 20 && result === null ? "animate-pulse" : ""}>
             <span style={{ fontSize: 15 + "rem" }}>
               {question.num + 1}
