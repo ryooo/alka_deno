@@ -12,26 +12,65 @@ export function ResultCanvas(resultId) {
     }
     return css
   })
-  return (
+  return useMemo(() => (
     <canvas id="result_canvas" style={style}></canvas>
-  )
+  ), [])
 }
 
-export const showConfetti = () => {
-  const TWO_PI = Math.PI * 2
-  const HALF_PI = Math.PI * 0.5
 
-  // canvas settings
-  const viewWidth = 800
-  const viewHeight = 800
-  const drawingCanvas = document.getElementById("result_canvas")
-  const timeStep = (1 / 60)
-
-  const Point = function (x, y) {
-    this.x = x || 0
-    this.y = y || 0
+/**
+ * easing equations from http://gizma.com/easing/
+ * t = current time
+ * b = start value
+ * c = delta value
+ * d = duration
+ */
+const Ease = {
+  inCubic: function (t, b, c, d) {
+    t /= d
+    return c * t * t * t + b
+  },
+  outCubic: function (t, b, c, d) {
+    t /= d
+    t--
+    return c * (t * t * t + 1) + b
+  },
+  inOutCubic: function (t, b, c, d) {
+    t /= d / 2
+    if (t < 1) return c / 2 * t * t * t + b
+    t -= 2
+    return c / 2 * (t * t * t + 2) + b
+  },
+  inBack: function (t, b, c, d, s) {
+    s = s || 1.70158
+    return c * (t /= d) * t * ((s + 1) * t - s) + b
   }
+}
 
+const cubeBezier = function (p0, c0, c1, p1, t) {
+  var p = new Point()
+  var nt = (1 - t)
+
+  p.x = nt * nt * nt * p0.x + 3 * nt * nt * t * c0.x + 3 * nt * t * t * c1.x + t * t * t * p1.x
+  p.y = nt * nt * nt * p0.y + 3 * nt * nt * t * c0.y + 3 * nt * t * t * c1.y + t * t * t * p1.y
+
+  return p
+}
+
+const TWO_PI = Math.PI * 2
+const HALF_PI = Math.PI * 0.5
+const Point = function (x, y) {
+  this.x = x || 0
+  this.y = y || 0
+}
+// canvas settings
+const viewWidth = 800
+const viewHeight = 800
+const timeStep = (1 / 60)
+
+
+export const showConfetti = (args) => {
+  const drawingCanvas = document.getElementById("result_canvas")
   const Particle = function (p0, p1, p2, p3) {
     this.p0 = p0
     this.p1 = p1
@@ -122,7 +161,7 @@ export const showConfetti = () => {
       ctx.fill()
     }
   }
-  function createCircleMark() {
+  function createMark() {
     circleMark = new CircleMark(viewWidth * 0.5, viewHeight * 0.5)
   }
 
@@ -135,8 +174,10 @@ export const showConfetti = () => {
     drawingCanvas.height = viewHeight
     ctx = drawingCanvas.getContext('2d')
 
-    createCircleMark()
-    createParticles()
+    createMark()
+    if (args.withParticle) {
+      createParticles()
+    }
   }
 
   function createParticles() {
@@ -170,11 +211,9 @@ export const showConfetti = () => {
     update()
     draw()
 
-    if (checkParticlesComplete()) {
-      // reset
+    if (!checkParticlesComplete() || !args.withParticle) {
+      requestAnimationFrame(loop)
     }
-
-    requestAnimationFrame(loop)
   }
 
   function checkParticlesComplete() {
@@ -184,46 +223,96 @@ export const showConfetti = () => {
     return true
   }
 
-  // math and stuff
+  initDrawingCanvas()
+  requestAnimationFrame(loop)
+}
 
-  /**
-   * easing equations from http://gizma.com/easing/
-   * t = current time
-   * b = start value
-   * c = delta value
-   * d = duration
-   */
-  var Ease = {
-    inCubic: function (t, b, c, d) {
-      t /= d
-      return c * t * t * t + b
+export const showFailed = () => {
+  const drawingCanvas = document.getElementById("result_canvas")
+  const NgMark = function (x, y) {
+    this.x = x
+    this.y = y
+
+    this.startRadius = 124
+
+    this.time = 0
+    this.enLarge = 0.2
+    this.largeStop = 0.5
+    this.enSmall = 0.8
+    this.scale = 0
+    this.alpha = 1
+
+    this.complete = false
+  }
+
+  NgMark.prototype = {
+    reset: function () {
+      this.time = 0
+      this.scale = 0
+      this.alpha = 0
+      this.complete = false
     },
-    outCubic: function (t, b, c, d) {
-      t /= d
-      t--
-      return c * (t * t * t + 1) + b
+    update: function () {
+      this.time = Math.min(this.enSmall, this.time + timeStep)
+      if (this.time < this.enLarge) {
+        this.alpha = Ease.inCubic(this.time, 0, 1, this.enLarge)
+        this.scale = Ease.inCubic(this.time, 0, 1, this.enLarge) * 0.2 + 0.8
+      } else if (this.time < this.largeStop) {
+        this.alpha = 1
+        this.scale = 1
+      } else {
+        this.alpha = 1 - Ease.outCubic(this.time - this.largeStop, 0, 1, this.enSmall - this.largeStop)
+        this.scale = 1 - (Ease.outCubic(this.time - this.largeStop, 0, 1, this.enSmall - this.largeStop) * 0.1)
+      }
+
+      this.complete = this.time === this.enSmall
     },
-    inOutCubic: function (t, b, c, d) {
-      t /= d / 2
-      if (t < 1) return c / 2 * t * t * t + b
-      t -= 2
-      return c / 2 * (t * t * t + 2) + b
-    },
-    inBack: function (t, b, c, d, s) {
-      s = s || 1.70158
-      return c * (t /= d) * t * ((s + 1) * t - s) + b
+    draw: function () {
+      ctx.lineWidth = 15
+      ctx.strokeStyle = "rgba(" + [214, 51, 105, this.alpha] + ")"
+      ctx.beginPath()
+      ctx.moveTo(this.x - 100 * this.scale, this.y - 100 * this.scale)
+      ctx.lineTo(this.x + 100 * this.scale, this.y + 100 * this.scale)
+      ctx.closePath()
+      ctx.stroke()
+      ctx.beginPath()
+      ctx.moveTo(this.x + 100 * this.scale, this.y - 100 * this.scale)
+      ctx.lineTo(this.x - 100 * this.scale, this.y + 100 * this.scale)
+      ctx.closePath()
+      ctx.stroke()
     }
   }
-
-  function cubeBezier(p0, c0, c1, p1, t) {
-    var p = new Point()
-    var nt = (1 - t)
-
-    p.x = nt * nt * nt * p0.x + 3 * nt * nt * t * c0.x + 3 * nt * t * t * c1.x + t * t * t * p1.x
-    p.y = nt * nt * nt * p0.y + 3 * nt * nt * t * c0.y + 3 * nt * t * t * c1.y + t * t * t * p1.y
-
-    return p
+  function createMark() {
+    mark = new NgMark(viewWidth * 0.5, viewHeight * 0.5)
   }
+
+  let mark
+  let ctx
+
+  function initDrawingCanvas() {
+    drawingCanvas.width = viewWidth
+    drawingCanvas.height = viewHeight
+    ctx = drawingCanvas.getContext('2d')
+
+    createMark()
+  }
+
+  function update() {
+    mark.update()
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, viewWidth, viewHeight)
+    mark.draw()
+  }
+
+  function loop() {
+    update()
+    draw()
+
+    requestAnimationFrame(loop)
+  }
+
   initDrawingCanvas()
   requestAnimationFrame(loop)
 }

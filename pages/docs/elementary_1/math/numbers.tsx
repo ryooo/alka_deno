@@ -6,7 +6,7 @@ import TestStart from '~/components/test-start.tsx'
 import { useSpeechSynthesisUtterance } from '~/hooks/useSpeechSynthesisUtterance.ts'
 import BarProgress from '~/components/bar-progress.tsx'
 import ImageContainer from '~/components/image-container.tsx'
-import { ResultCanvas, showConfetti } from '~/components/result_canvas.tsx'
+import { ResultCanvas, showConfetti, showFailed } from '~/components/result_canvas.tsx'
 
 export default function PageMainContents({
   className
@@ -67,7 +67,11 @@ function TestQuestion({
   }, [question])
   const showResultAndOnNext = useCallback((ret) => {
     setResult(ret)
-    showConfetti()
+    if (ret === true) {
+      showConfetti({ withParticle: true })
+    } else {
+      showFailed()
+    }
     setTimeout(() => { onNext() }, 500)
   })
   return (
