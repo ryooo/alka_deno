@@ -17,7 +17,6 @@ export function ResultCanvas(resultId) {
   ), [])
 }
 
-
 /**
  * easing equations from http://gizma.com/easing/
  * t = current time
@@ -69,7 +68,9 @@ const viewHeight = 800
 const timeStep = (1 / 60)
 
 
-export const showConfetti = (args) => {
+export const showConfetti = (args = {}) => {
+  const se = new Audio("/se/ok.mp3")
+
   const drawingCanvas = document.getElementById("result_canvas")
   const Particle = function (p0, p1, p2, p3) {
     this.p0 = p0
@@ -139,12 +140,14 @@ export const showConfetti = (args) => {
       this.scale = 0
       this.alpha = 1
       this.complete = false
+      se.currentTime = 0
     },
     update: function () {
       this.time = Math.min(this.enSmall, this.time + timeStep)
       if (this.time < this.enLarge) {
         this.scale = Ease.outCubic(this.time, 0, 1, this.enLarge)
       } else if (this.time < this.largeStop) {
+        se.play()
         this.scale = 1
       } else {
         this.alpha = 1 - Ease.outCubic(this.time - this.largeStop, 0, 1, this.enSmall - this.largeStop)
@@ -228,6 +231,8 @@ export const showConfetti = (args) => {
 }
 
 export const showFailed = () => {
+  const se = new Audio("/se/ng.mp3")
+
   const drawingCanvas = document.getElementById("result_canvas")
   const NgMark = function (x, y) {
     this.x = x
@@ -251,6 +256,7 @@ export const showFailed = () => {
       this.scale = 0
       this.alpha = 0
       this.complete = false
+      se.currentTime = 0
     },
     update: function () {
       this.time = Math.min(this.enSmall, this.time + timeStep)
@@ -260,6 +266,7 @@ export const showFailed = () => {
       } else if (this.time < this.largeStop) {
         this.alpha = 1
         this.scale = 1
+        se.play()
       } else {
         this.alpha = 1 - Ease.outCubic(this.time - this.largeStop, 0, 1, this.enSmall - this.largeStop)
         this.scale = 1 - (Ease.outCubic(this.time - this.largeStop, 0, 1, this.enSmall - this.largeStop) * 0.1)

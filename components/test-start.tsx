@@ -22,7 +22,8 @@ export default function TestStart({
       SetEnableVoiceButton(true)
       onStart()
     })
-  })
+  }, [])
+
   return (
     <>
       <div className="text-center mb-32">

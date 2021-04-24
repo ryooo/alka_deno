@@ -3,8 +3,8 @@ import React, { ComponentType, useEffect } from 'react'
 import Header from './components/header.tsx'
 import 'https://esm.sh/tailwindcss/dist/tailwind.min.css'
 
+window.kuromojiWorker = null
 export default function App({ Page, pageProps }: { Page: ComponentType<any>, pageProps: any }) {
-
   useEffect(() => {
     const script = document.createElement("script")
     script.src = "https://www.googletagmanager.com/gtag/js?id=GTM-KPXJ2GB"
@@ -19,6 +19,16 @@ export default function App({ Page, pageProps }: { Page: ComponentType<any>, pag
       gtag('js', new Date());
     `
     document.body.appendChild(setupScript)
+  }, [])
+
+  useEffect(() => {
+    const worker = new Worker(new URL("./js/worker.js", location.origin), { type: "module" })
+    worker.onmessage = (e) => {
+      if (e.data === "build:success") {
+        window.kuromojiWorker = worker
+      }
+    }
+    worker.postMessage({ method: "build" })
   }, [])
 
   return (
