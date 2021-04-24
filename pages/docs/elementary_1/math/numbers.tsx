@@ -14,14 +14,18 @@ export default function PageMainContents({
   className?: string,
 }) {
   const [questions, setQuestions] = useState(null)
-  const createQuestions = useCallback(() => {
+  const createQuestions = useCallback(async () => {
+    await waitForKuromojiWorker()
     setQuestions(ld.shuffle(ld.times(10, (n) => {
-      num = n + 1
+      const num = n + 1
+      const ansers = number_to_ansers(num)
       return {
-        num: num, limitTime: 20, id: num, test: (anser) => {
-          ld.forEach(number_to_ansers(num), (correctStr) => {
-            if (correctStr == anser) return true
-          })
+        num: num, limitTime: 10, id: num, test: (anser) => {
+          for (let i in ansers) {
+            if (anser.endsWith(ansers[i])) {
+              return true
+            }
+          }
           return false
         }
       }
@@ -47,37 +51,46 @@ export default function PageMainContents({
 
 function TestQuestions({
   questions,
-  onNext,
 }: {
   questions: any,
-  onNext: () => void,
 }) {
+  const [cleared, setCleared] = useState(false)
+  const recognition = useSpeechRecognition()
   const [currentQuestion, setCurrentQuestion] = useState(null)
-  const serveNextQuestion = useCallback(() => { setCurrentQuestion(questions.pop()) }, [])
-  useEffect(() => {
-    const startListenSpeaking = async () => {
-      await waitForKuromojiWorker()
-      useSpeechRecognition()
-      serveNextQuestion()
-    }
-    startListenSpeaking()
-  }, [questions])
-
   const [percent, setPercent] = useState(100)
-  const [result, setResult] = useState(false)
+
+  const serveNextQuestion = useCallback(() => {
+    const nextQuestion = questions.pop()
+    if (nextQuestion === undefined) {
+      setCleared(true)
+    } else {
+      setCurrentQuestion(nextQuestion)
+    }
+  }, [])
+
   useEffect(() => {
-    if (currentQuestion === null) return
+    serveNextQuestion()
+    return () => {
+      recognition?.destroy()
+    }
+  }, [questions, recognition])
+
+  useEffect(() => {
     window.kuromojiWorker.onmessage = (message) => {
-      console.log(currentQuestion, message.data)
-      if (currentQuestion.test(message.data[0].reading)) {
-        showResultAndOnNext(100)
+      if (currentQuestion.score) return
+      if (currentQuestion.test(message.data.anser)) {
+        recognition.reset()
+        const score = percent
+        currentQuestion.score = score
+        showResultAndOnNext(score)
       }
     }
+
     const startAt = Date.now()
     function tick() {
       const rest = currentQuestion.limitTime - ((Date.now() - startAt) / 1000)
       setPercent(rest * 100 / currentQuestion.limitTime)
-      if (rest <= 0 && typeof showResultAndOnNext === "function") {
+      if (rest <= 0) {
         clearInterval(timerId)
         showResultAndOnNext(0)
       }
@@ -85,11 +98,11 @@ function TestQuestions({
     const timerId = setInterval(tick, 30)
     return () => clearInterval(timerId)
   }, [currentQuestion])
+
   const showResultAndOnNext = useCallback((score) => {
-    setResult(score >= 50)
     if (score >= 80) {
       showConfetti({ withParticle: true })
-    } else if (score >= 50) {
+    } else if (score >= 1) {
       showConfetti()
     } else {
       showFailed()
@@ -99,18 +112,21 @@ function TestQuestions({
 
   return (
     <div className="text-center">
-      {currentQuestion === null ? (<>じゅんびちゅう...</>) :
-        (<>
-          <BarProgress percent={percent} />
-          <ResultCanvas />
-          <div className={percent < 20 && result === null ? "animate-pulse" : ""}>
-            <span style={{ fontSize: 15 + "rem" }}>
-              {currentQuestion.num}
-            </span>
-            <ImageContainer imageName="cookies" count={currentQuestion.num} perRow={5} />
-          </div>
-        </>)
-      }
+      {cleared ? (
+        <>クリア！</>
+      ) : (
+        currentQuestion === null ? (<>じゅんびちゅう...</>) :
+          (<>
+            <BarProgress percent={percent} />
+            <ResultCanvas />
+            <div className={percent < 20 && currentQuestion.score === undefined ? "animate-pulse" : ""}>
+              <span style={{ fontSize: 15 + "rem" }}>
+                {currentQuestion.num}
+              </span>
+              <ImageContainer imageName="cookies" count={currentQuestion.num} perRow={5} />
+            </div>
+          </>)
+      )}
     </div>
   )
 }

@@ -10,7 +10,7 @@ export async function run(...cmd: string[]) {
 }
 
 export function number_to_ansers(num) {
-  let ansers = [num]
+  let ansers = [num + ""]
   if (num === 1) {
     ansers.push("イチ")
   } else if (num === 2) {
