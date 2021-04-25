@@ -1,0 +1,196 @@
+
+  aside {
+    position: sticky;
+    top: 80px;
+    z-index: 98;
+    float: left;
+    width: 270px;
+
+    .search {
+      width: 100%;
+      padding-top: 6px;
+
+      input {
+        box-shadow: none;
+        box-sizing: border-box;
+        display: inline-block;
+        font-size: 14px;
+        line-height: 36px;
+        width: 100%;
+        height: 36px;
+        padding: 3px 9px;
+        border: 1px solid #eee;
+        border-radius: 5px;
+        outline: 0px;
+        color: #000;
+        background-color: transparent;
+        caret-color: #000;
+        transition: border-color .3s linear, color .3s linear;
+        text-overflow: ellipsis;
+        -webkit-appearance: none;
+
+        &:hover {
+          color: #000;
+          border-color: #666;
+        }
+        &:focus {
+          color: #111;
+          border-color: #999;
+        }
+      }
+    }
+
+    nav {
+      width: 100%;
+      height: calc(100vh - 80px - 6px - 36px - 2.1rem);
+      overflow: hidden;
+      overflow-y: auto;
+      margin-top: 2.1rem;
+
+      &:after {
+        display: block;
+        height: 1.8rem;
+        content: "";
+      }
+
+      h2 {
+        line-height: 1.27;
+        font-size: 0.9rem;
+        font-weight: 400;
+        text-transform: uppercase;
+        color: #999;
+      }
+
+      ul + h2 {
+        margin-top: 2.1rem;
+      }
+
+      ul {
+        li {
+          margin-top: 15px;
+
+          &.indent {
+            border-left: 1px solid rgb(234, 234, 234);
+            padding-left: 19px;
+            margin-left: 3px;
+
+            & + li.indent {
+              margin-top: 0;
+              padding-top: 18px;
+            }
+          }
+
+          label {
+            line-height: 1.27;
+            font-size: 1rem;
+            color: #333;
+            cursor: pointer;
+
+            svg {
+              display: inline-block;
+              margin-right: 14px;
+              transition: transform .15s linear;
+            }
+            &.open svg {
+              margin-left: 1px;
+              margin-right: 13px;
+              transform: rotate(90deg);
+            }
+          }
+
+          a {
+            display: flex;
+            align-items: center;
+            line-height: 1.27;
+            font-size: 1rem;
+            color: #333;
+
+            &:before {
+              flex-basis: 4px;
+              flex-shrink: 0;
+              display: block;
+              width: 4px;
+              height: 4px;
+              margin-right: 16px;
+              border-radius: 50%;
+              background-color: #999;
+              transition: background-color .15s linear;
+              content: "";
+            }
+
+            &.active {
+              color: #000;
+              font-weight: 600;
+            }
+            &:hover {
+              color: #000;
+            }
+            &.active:before,
+            &:hover:before {
+              background-color: #111;
+            }
+          }
+        }
+      }
+    }
+
+    .menu-button {
+      display: none;
+      width: 90%;
+      height: 18px;
+      margin: 0 auto;
+      padding: 18px 0;
+      line-height: 18px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #333;
+      user-select: none;
+      cursor: pointer;
+
+      svg {
+        display: inline-block;
+        margin-right: 14px;
+        transition: transform .15s linear;
+      }
+
+      &.open svg {
+        margin-left: 1px;
+        margin-right: 13px;
+        transform: rotate(90deg);
+      }
+    }
+
+    @media screen and (max-width: 900px) {
+      top: -36px;
+      float: none;
+      width: 100%;
+      border-bottom: 1px solid #eee;
+      background-color: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(6px);
+
+      .search {
+        width: 90%;
+        margin: 0 auto;
+        padding-top: 0;
+      }
+
+      .menu-button {
+        display: block;
+      }
+
+      nav {
+        display: none;
+        margin-top: 0;
+        height: calc(100vh - 18px - 18px - 18px);
+
+        &.open {
+          display: block;
+        }
+
+        h2, ul {
+          width: 80%;
+          margin: 0 auto;
+        }
+      }
+    }
+  }

@@ -1,5 +1,6 @@
 ---
 title: 小学1年生
+className: commentary
 authors:
   - ryooo
 ---

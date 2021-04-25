@@ -33,6 +33,7 @@ export default function Docs({ Page }: { Page?: ComponentType<any> & { meta: Met
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@ryooo_321" />
         <link rel="stylesheet" href="~/style/docs.css" />
+        <link rel="stylesheet" href="~/style/sidebar.css" />
       </head>
       <aside>
         <div className="search">
@@ -56,7 +57,7 @@ export default function Docs({ Page }: { Page?: ComponentType<any> & { meta: Met
         </nav>
       </aside>
       <div className="content">
-        {Page && <Page className="doc-page" />}
+        {Page && <Page className={Page.meta.className} />}
         <div className="bottom-space" />
       </div>
     </div >
