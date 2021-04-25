@@ -26,10 +26,10 @@ export default function TestStart({
 
   return (
     <>
-      <div className="text-center mb-32">
+      <div className="text-center mb-32 quizFont">
         {description}
       </div>
-      <div className="grid items-center justify-items-center">
+      <div className="grid items-center justify-items-center quizFont">
         <div className="h-24 grid place-content-end">
           {enableVoiceButton && (
             <svg className="animate-bounce w-12 " fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" viewBox="0 0 24 24" stroke="currentColor">
