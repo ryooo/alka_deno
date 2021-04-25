@@ -313,4 +313,5 @@ function TestQuestions({
 
 PageMainContents.meta = {
   title: getTitle(import.meta.url),
+  className: "testPage",
 }

@@ -8,7 +8,7 @@
     width: 100%;
   }
 
-  .commentary, .question {
+  .commentaryPage, .testPage {
     h1, h2, h3, h4, h5 {
       margin-top: 3rem;
       line-height: 1.27;

@@ -12,15 +12,18 @@ export default function E404() {
         <title>404 - Page Not Found</title>
         <meta name="robots" content="noindex" />
         <link rel="stylesheet" href="./style/app.css" />
+        <link rel="stylesheet" href="./style/index.css" />
       </head>
       <Header />
-      <div className="fullscreen-page">
-        <Logo
-          size={150}
-          glitch={true}
-          fallback={<PlainLogo size={150} />}
-        />
-        <p style={{ marginTop: '1.8rem' }}><strong style={{ color: 'black' }}>404</strong> - Page Not Found</p>
+      <div className="index-page">
+        <div className="fullscreen-page">
+          <Logo
+            size={150}
+            glitch={true}
+            fallback={<PlainLogo size={150} />}
+          />
+          <p style={{ marginTop: '1.8rem' }}><strong style={{ color: 'black' }}>404</strong> - ページがみつかりません。</p>
+        </div>
       </div>
     </>
   )
