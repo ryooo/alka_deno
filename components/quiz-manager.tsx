@@ -1,34 +1,43 @@
 import React, { useEffect, useState, useCallback, createElement } from 'react'
 import QuizResultList from '~/components/quiz-result-list.tsx'
-import { canvasShow } from '~/components/result-canvas.tsx'
+import { ResultCanvas, canvasShow } from '~/components/result-canvas.tsx'
 import { useSpeechRecognition } from '~/hooks/use-speech-recognition.ts'
+import QuizStart from '~/components/quiz-start.tsx'
+import { waitForKuromojiWorker } from '~/hooks/use-speech-recognition.ts'
+import { useSetRecoilState } from '@recoil'
+import { SidebarConditionAtom } from '~/atoms/sidebar-condition-atom.ts'
 
 export default function QuizManager({
+  description,
   questions,
 }: {
+  description: any,
   questions: any,
 }) {
   const recognition = useSpeechRecognition()
   useEffect(() => { return () => { recognition?.destroy() } }, [recognition])
 
+  const setSidebarCondition = useSetRecoilState(SidebarConditionAtom)
   const [questionIndex, setQuestionIndex] = useState()
   const [scores, setScores] = useState({})
-  const [allCleared, setAllCleared] = useState(false)
+  const [phase, setPhase] = useState("description")
   const [question, setQuestion] = useState(null)
   const [timeLimitPercent, setTimeLimitPercent] = useState(100)
   const [shouldPulse, setShouldPulse] = useState(false)
 
-  useEffect(() => {
-    if (!questions) return
+  const onStart = useCallback(async () => {
+    await waitForKuromojiWorker()
+    setSidebarCondition({ show: false })
+    setPhase("quiz")
     setQuestionIndex(0)
-  }, [questions])
+  }, [])
 
   useEffect(() => {
     if (!questions || questionIndex === undefined) return
 
     const tmpQuestion = questions[questionIndex]
     if (tmpQuestion === undefined) {
-      setAllCleared(true)
+      setPhase("result")
     } else {
       let percent = 100
       let cleared = false
@@ -76,15 +85,14 @@ export default function QuizManager({
 
   return (
     <div className="text-center">
-      {allCleared ? (
-        <>
-          <QuizResultList questions={questions} scores={scores} />
-        </>
-      ) : (
+      <ResultCanvas />
+      {phase == "description" && (<QuizStart description={description} onStart={onStart} />)}
+      {phase == "quiz" && (
         question === null ?
-          (<>じゅんびちゅう...</>) :
+          (<><ruby data-ruby="じゅんびちゅう">準備中</ruby>...</>) :
           (question.renderer({ question, timeLimitPercent, shouldPulse }))
       )}
+      {phase == "result" && (<QuizResultList questions={questions} scores={scores} />)}
     </div>
   )
 }
