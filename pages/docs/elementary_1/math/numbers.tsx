@@ -7,7 +7,7 @@ import ImageContainer from '~/components/image-container.tsx'
 import TestResultList from '~/components/test-result-list.tsx'
 import { ResultCanvas, showConfetti, showFailed } from '~/components/result_canvas.tsx'
 import { useSpeechRecognition, waitForKuromojiWorker } from '~/hooks/useSpeechRecognition.ts'
-import { number_to_ansers } from '~/shared/util.ts'
+import { numberToAnsers, kanaToHira } from '~/shared/util.ts'
 
 export default function PageMainContents({
   className
@@ -17,20 +17,28 @@ export default function PageMainContents({
   const [questions, setQuestions] = useState(null)
   const createQuestions = useCallback(async () => {
     await waitForKuromojiWorker()
-    setQuestions(ld.shuffle(ld.times(1, (n) => {
-      const num = n + 1
-      const ansers = number_to_ansers(num)
-      return {
-        num: num, limitTime: 10, id: num, test: (anser) => {
-          for (let i in ansers) {
-            if (anser.endsWith(ansers[i])) {
-              return true
+    setQuestions(
+      ld.shuffle(
+        ld.times(2, (n) => {
+          const num = n + 1
+          const ansers = numberToAnsers(num)
+          return {
+            id: num,
+            quiz: num,
+            limitTime: 2,
+            typicalAnser: kanaToHira(ansers[0]),
+            test: (anser) => {
+              for (let i in ansers) {
+                if (anser.endsWith(ansers[i])) {
+                  return true
+                }
+              }
+              return false
             }
           }
-          return false
-        }
-      }
-    })))
+        })
+      )
+    )
   }, [])
 
   return (
@@ -55,61 +63,61 @@ function TestQuestions({
 }: {
   questions: any,
 }) {
-  const [cleared, setCleared] = useState(false)
   const recognition = useSpeechRecognition()
+  useEffect(() => { return () => { recognition?.destroy() } }, [recognition])
+
+  const [questionIndex, setQuestionIndex] = useState()
+  const [scores, setScores] = useState({})
+  const [cleared, setCleared] = useState(false)
   const [currentQuestion, setCurrentQuestion] = useState(null)
   const [percent, setPercent] = useState(100)
 
-  const serveNextQuestion = useCallback(() => {
-    const nextQuestion = questions.pop()
+  useEffect(() => {
+    if (questions) {
+      setQuestionIndex(0)
+    }
+  }, [questions])
+
+  useEffect(() => {
+    if (!questions || questionIndex === undefined) return
+
+    const nextQuestion = questions[questionIndex]
     if (nextQuestion === undefined) {
       setCleared(true)
     } else {
+      const showResultAndOnNext = (score) => {
+        if (score >= 80) {
+          showConfetti({ withParticle: true })
+        } else if (score >= 1) {
+          showConfetti()
+        } else {
+          showFailed()
+        }
+        setTimeout(() => { setQuestionIndex(questionIndex + 1) }, 500)
+      }
       setCurrentQuestion(nextQuestion)
-    }
-  }, [])
-
-  useEffect(() => {
-    serveNextQuestion()
-    return () => {
-      recognition?.destroy()
-    }
-  }, [questions, recognition])
-
-  useEffect(() => {
-    window.kuromojiWorker.onmessage = (message) => {
-      if (currentQuestion.score) return
-      if (currentQuestion.test(message.data.anser)) {
-        recognition.reset()
-        const score = percent
-        currentQuestion.score = score
-        showResultAndOnNext(score)
+      window.kuromojiWorker.onmessage = (message) => {
+        if (nextQuestion.score) return
+        if (nextQuestion.test(message.data.anser)) {
+          recognition.reset()
+          const score = percent
+          showResultAndOnNext(score)
+        }
       }
-    }
 
-    const startAt = Date.now()
-    function tick() {
-      const rest = currentQuestion.limitTime - ((Date.now() - startAt) / 1000)
-      setPercent(rest * 100 / currentQuestion.limitTime)
-      if (rest <= 0) {
-        clearInterval(timerId)
-        showResultAndOnNext(0)
+      const startAt = Date.now()
+      const tick = () => {
+        const rest = nextQuestion.limitTime - ((Date.now() - startAt) / 1000)
+        setPercent(rest * 100 / nextQuestion.limitTime)
+        if (rest <= 0) {
+          clearInterval(timerId)
+          showResultAndOnNext(0)
+        }
       }
+      const timerId = setInterval(tick, 30)
+      return () => clearInterval(timerId)
     }
-    const timerId = setInterval(tick, 30)
-    return () => clearInterval(timerId)
-  }, [currentQuestion])
-
-  const showResultAndOnNext = useCallback((score) => {
-    if (score >= 80) {
-      showConfetti({ withParticle: true })
-    } else if (score >= 1) {
-      showConfetti()
-    } else {
-      showFailed()
-    }
-    setTimeout(() => { serveNextQuestion() }, 500)
-  }, [])
+  }, [questionIndex])
 
   return (
     <div className="text-center">
@@ -124,9 +132,9 @@ function TestQuestions({
             <ResultCanvas />
             <div className={percent < 20 && currentQuestion.score === undefined ? "animate-pulse quizFont" : "quizFont"}>
               <span style={{ fontSize: 15 + "rem" }}>
-                {currentQuestion.num}
+                {currentQuestion.quiz}
               </span>
-              <ImageContainer imageName="cookies" count={currentQuestion.num} perRow={5} />
+              <ImageContainer imageName="cookies" count={currentQuestion.quiz} perRow={5} />
             </div>
           </>)
       )}

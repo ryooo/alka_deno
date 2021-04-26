@@ -9,8 +9,8 @@ export async function run(...cmd: string[]) {
   return new TextDecoder().decode(output)
 }
 
-export function number_to_ansers(num) {
-  let ansers = [num + ""]
+export function numberToAnsers(num) {
+  let ansers = []
   if (num === 1) {
     ansers.push("イチ")
   } else if (num === 2) {
@@ -32,5 +32,13 @@ export function number_to_ansers(num) {
   } else if (num === 10) {
     ansers.push("ジュウ")
   }
+  ansers.push(num + "")
   return ansers
+}
+
+export function kanaToHira(str) {
+  return str.replace(/[\u30a1-\u30f6]/g, function (match) {
+    var chr = match.charCodeAt(0) - 0x60
+    return String.fromCharCode(chr)
+  })
 }
