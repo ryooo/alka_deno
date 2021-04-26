@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { ld } from 'https://x.nest.land/deno-lodash@1.0.0/mod.ts'
-import { getTitle } from '~/components/navList.tsx'
+import { getTitle } from '~/components/nav-list.tsx'
 import TestStart from '~/components/test-start.tsx'
 import BarProgress from '~/components/bar-progress.tsx'
 import ImageContainer from '~/components/image-container.tsx'
 import TestResultList from '~/components/test-result-list.tsx'
-import { ResultCanvas, showConfetti, showFailed } from '~/components/result_canvas.tsx'
-import { useSpeechRecognition, waitForKuromojiWorker } from '~/hooks/useSpeechRecognition.ts'
+import { ResultCanvas, showConfetti, showFailed } from '~/components/result-canvas.tsx'
+import { useSpeechRecognition, waitForKuromojiWorker } from '~/hooks/use-speech-recognition.ts'
 import { numberToAnsers, kanaToHira } from '~/shared/util.ts'
 
 export default function PageMainContents({
@@ -68,47 +68,55 @@ function TestQuestions({
 
   const [questionIndex, setQuestionIndex] = useState()
   const [scores, setScores] = useState({})
-  const [cleared, setCleared] = useState(false)
+  const [allCleared, setAllCleared] = useState(false)
   const [currentQuestion, setCurrentQuestion] = useState(null)
   const [percent, setPercent] = useState(100)
 
   useEffect(() => {
-    if (questions) {
-      setQuestionIndex(0)
-    }
+    if (!questions) return
+    setQuestionIndex(0)
   }, [questions])
 
   useEffect(() => {
     if (!questions || questionIndex === undefined) return
 
-    const nextQuestion = questions[questionIndex]
-    if (nextQuestion === undefined) {
-      setCleared(true)
+    const question = questions[questionIndex]
+    if (question === undefined) {
+      setAllCleared(true)
     } else {
+      let percent = 100
+      let cleared = false
       const showResultAndOnNext = (score) => {
-        if (score >= 80) {
+        if (cleared) return
+        cleared = true
+        score = Math.floor(score)
+        if (score >= 90) {
           showConfetti({ withParticle: true })
         } else if (score >= 1) {
           showConfetti()
         } else {
           showFailed()
         }
+        scores[question.id] = score
+        setScores(scores)
         setTimeout(() => { setQuestionIndex(questionIndex + 1) }, 500)
       }
-      setCurrentQuestion(nextQuestion)
       window.kuromojiWorker.onmessage = (message) => {
-        if (nextQuestion.score) return
-        if (nextQuestion.test(message.data.anser)) {
+        if (question.score) return
+        if (question.test(message.data.anser)) {
+          clearInterval(timerId)
           recognition.reset()
-          const score = percent
-          showResultAndOnNext(score)
+          showResultAndOnNext(Math.min(percent * 1.2, 100))
         }
       }
+      setCurrentQuestion(question)
 
       const startAt = Date.now()
       const tick = () => {
-        const rest = nextQuestion.limitTime - ((Date.now() - startAt) / 1000)
-        setPercent(rest * 100 / nextQuestion.limitTime)
+        if (cleared) return
+        const rest = question.limitTime - ((Date.now() - startAt) / 1000)
+        percent = rest * 100 / question.limitTime
+        setPercent(percent)
         if (rest <= 0) {
           clearInterval(timerId)
           showResultAndOnNext(0)
@@ -121,16 +129,16 @@ function TestQuestions({
 
   return (
     <div className="text-center">
-      {cleared ? (
+      {allCleared ? (
         <>
-          <TestResultList questions={questions} />
+          <TestResultList questions={questions} scores={scores} />
         </>
       ) : (
         currentQuestion === null ? (<>じゅんびちゅう...</>) :
           (<>
             <BarProgress percent={percent} />
             <ResultCanvas />
-            <div className={percent < 20 && currentQuestion.score === undefined ? "animate-pulse quizFont" : "quizFont"}>
+            <div className={percent < 20 ? "animate-pulse quizFont" : "quizFont"}>
               <span style={{ fontSize: 15 + "rem" }}>
                 {currentQuestion.quiz}
               </span>

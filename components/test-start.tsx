@@ -1,7 +1,7 @@
 import { useRouter } from 'framework/react'
 import React, { useEffect, useState, useCallback } from 'react'
 import Button from '~/components/button.tsx'
-import { useSpeechSynthesisUtterance } from '~/hooks/useSpeechSynthesisUtterance.ts'
+import { useSpeechSynthesisUtterance } from '~/hooks/use-speech-synthesis-utterance.ts'
 
 export default function TestStart({
   description,

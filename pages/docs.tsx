@@ -1,7 +1,7 @@
 import { useRouter } from 'framework/react'
 import util from 'aleph/shared/util.ts'
 import React, { ComponentType, Fragment, useEffect, useMemo, useState } from 'react'
-import NavList from '~/components/navList.tsx'
+import NavList from '~/components/nav-list.tsx'
 
 const ogImage = 'https://alephjs.org/twitter_card.jpg'
 const about = 'The Documentation of Aleph.js.'
