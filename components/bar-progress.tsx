@@ -6,7 +6,7 @@ export default function BarProgress({
   transitionOff,
 }: {
   percent: number,
-  transitionOff: boolean,
+  transitionOff?: boolean,
 }) {
   return (
     <>

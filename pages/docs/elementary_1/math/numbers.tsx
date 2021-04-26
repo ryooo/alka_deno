@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useCallback, forwardRef } from 'react'
 import { ld } from 'https://x.nest.land/deno-lodash@1.0.0/mod.ts'
 import { getTitle } from '~/components/nav-list.tsx'
-import TestStart from '~/components/test-start.tsx'
+import QuizStart from '~/components/quiz-start.tsx'
+import QuizResultList from '~/components/quiz-result-list.tsx'
 import BarProgress from '~/components/bar-progress.tsx'
 import ImageContainer from '~/components/image-container.tsx'
-import TestResultList from '~/components/test-result-list.tsx'
 import { ResultCanvas, canvasShow } from '~/components/result-canvas.tsx'
 import { useSpeechRecognition, waitForKuromojiWorker } from '~/hooks/use-speech-recognition.ts'
 import { numberToAnsers, kanaToHira } from '~/shared/util.ts'
@@ -45,7 +45,7 @@ export default function PageMainContents({
     <div className={className}>
       <ResultCanvas />
       {questions === null ? (
-        <TestStart
+        <QuizStart
           description={(
             <>
               <h1>「スタート！」っていったら</h1>
@@ -70,8 +70,8 @@ function TestQuestions({
   const [questionIndex, setQuestionIndex] = useState()
   const [scores, setScores] = useState({})
   const [allCleared, setAllCleared] = useState(false)
-  const [currentQuestion, setCurrentQuestion] = useState(null)
-  const [percent, setPercent] = useState(100)
+  const [question, setQuestion] = useState(null)
+  const [timeLimitPercent, setTimeLimitPercent] = useState(100)
 
   useEffect(() => {
     if (!questions) return
@@ -81,8 +81,8 @@ function TestQuestions({
   useEffect(() => {
     if (!questions || questionIndex === undefined) return
 
-    const question = questions[questionIndex]
-    if (question === undefined) {
+    const tmpQuestion = questions[questionIndex]
+    if (tmpQuestion === undefined) {
       setAllCleared(true)
     } else {
       let percent = 100
@@ -98,26 +98,26 @@ function TestQuestions({
         } else {
           canvasShow("NgMark")
         }
-        scores[question.id] = score
+        scores[tmpQuestion.id] = score
         setScores(scores)
         setTimeout(() => { setQuestionIndex(questionIndex + 1) }, 500)
       }
       window.kuromojiWorker.onmessage = (message) => {
-        if (question.score) return
-        if (question.test(message.data.anser)) {
+        if (tmpQuestion.score) return
+        if (tmpQuestion.test(message.data.anser)) {
           clearInterval(timerId)
           recognition.reset()
           showResultAndOnNext(Math.min(percent * 1.2, 100))
         }
       }
-      setCurrentQuestion(question)
+      setQuestion(tmpQuestion)
 
       const startAt = Date.now()
       const tick = () => {
         if (cleared) return
-        const rest = question.limitTime - ((Date.now() - startAt) / 1000)
-        percent = rest * 100 / question.limitTime
-        setPercent(percent)
+        const rest = tmpQuestion.limitTime - ((Date.now() - startAt) / 1000)
+        percent = rest * 100 / tmpQuestion.limitTime
+        setTimeLimitPercent(percent)
         if (rest <= 0) {
           clearInterval(timerId)
           showResultAndOnNext(0)
@@ -132,17 +132,17 @@ function TestQuestions({
     <div className="text-center">
       {allCleared ? (
         <>
-          <TestResultList questions={questions} scores={scores} />
+          <QuizResultList questions={questions} scores={scores} />
         </>
       ) : (
-        currentQuestion === null ? (<>じゅんびちゅう...</>) :
+        question === null ? (<>じゅんびちゅう...</>) :
           (<>
-            <BarProgress percent={percent} />
-            <div className={percent < 20 ? "animate-pulse quizFont" : "quizFont"}>
+            <BarProgress percent={timeLimitPercent} />
+            <div className={timeLimitPercent < 20 ? "animate-pulse quizFont" : "quizFont"}>
               <span style={{ fontSize: 15 + "rem" }}>
-                {currentQuestion.quiz}
+                {question.quiz}
               </span>
-              <ImageContainer imageName="cookies" count={currentQuestion.quiz} perRow={5} />
+              <ImageContainer imageName="cookies" count={question.quiz} perRow={5} />
             </div>
           </>)
       )}
