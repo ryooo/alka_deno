@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, forwardRef } from 'react'
 import { ld } from 'https://x.nest.land/deno-lodash@1.0.0/mod.ts'
 import { getTitle } from '~/components/nav-list.tsx'
 import TestStart from '~/components/test-start.tsx'
 import BarProgress from '~/components/bar-progress.tsx'
 import ImageContainer from '~/components/image-container.tsx'
 import TestResultList from '~/components/test-result-list.tsx'
-import { ResultCanvas, showConfetti, showFailed } from '~/components/result-canvas.tsx'
+import { ResultCanvas, canvasShow } from '~/components/result-canvas.tsx'
 import { useSpeechRecognition, waitForKuromojiWorker } from '~/hooks/use-speech-recognition.ts'
 import { numberToAnsers, kanaToHira } from '~/shared/util.ts'
 
@@ -19,13 +19,13 @@ export default function PageMainContents({
     await waitForKuromojiWorker()
     setQuestions(
       ld.shuffle(
-        ld.times(2, (n) => {
+        ld.times(10, (n) => {
           const num = n + 1
           const ansers = numberToAnsers(num)
           return {
             id: num,
             quiz: num,
-            limitTime: 2,
+            limitTime: 20,
             typicalAnser: kanaToHira(ansers[0]),
             test: (anser) => {
               for (let i in ansers) {
@@ -43,6 +43,7 @@ export default function PageMainContents({
 
   return (
     <div className={className}>
+      <ResultCanvas />
       {questions === null ? (
         <TestStart
           description={(
@@ -91,11 +92,11 @@ function TestQuestions({
         cleared = true
         score = Math.floor(score)
         if (score >= 90) {
-          showConfetti({ withParticle: true })
+          canvasShow(["OkMark", "Particles"])
         } else if (score >= 1) {
-          showConfetti()
+          canvasShow("OkMark")
         } else {
-          showFailed()
+          canvasShow("NgMark")
         }
         scores[question.id] = score
         setScores(scores)
@@ -137,7 +138,6 @@ function TestQuestions({
         currentQuestion === null ? (<>じゅんびちゅう...</>) :
           (<>
             <BarProgress percent={percent} />
-            <ResultCanvas />
             <div className={percent < 20 ? "animate-pulse quizFont" : "quizFont"}>
               <span style={{ fontSize: 15 + "rem" }}>
                 {currentQuestion.quiz}

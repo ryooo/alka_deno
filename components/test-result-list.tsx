@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
 import { ld } from 'https://x.nest.land/deno-lodash@1.0.0/mod.ts'
+import { canvasShow } from '~/components/result-canvas.tsx'
 
 export default function TestResultList({
   questions,
@@ -9,6 +10,7 @@ export default function TestResultList({
   scores: any,
 }) {
   return useMemo(() => {
+    canvasShow(["Particles"])
     const sortedQuestions = ld.sortBy(questions, [(q) => { return q.id }])
     return (
       <>
