@@ -2,6 +2,7 @@ import { useDeno } from 'framework/react'
 import React, { ComponentType, useEffect } from 'react'
 import Header from './components/header.tsx'
 import 'https://esm.sh/tailwindcss/dist/tailwind.min.css'
+import { RecoilRoot } from 'https://esm.sh/recoil@0.1.2'
 
 window.kuromojiWorker = null
 export default function App({ Page, pageProps }: { Page: ComponentType<any>, pageProps: any }) {
@@ -32,13 +33,15 @@ export default function App({ Page, pageProps }: { Page: ComponentType<any>, pag
   }, [])
 
   return (
-    <main>
-      <link rel="stylesheet" href="./style/app.css" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" />
-      <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru&display=swap" rel="stylesheet" />
-      <Header />
-      <Page {...pageProps} />
-    </main>
+    <RecoilRoot>
+      <main>
+        <link rel="stylesheet" href="./style/app.css" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru&display=swap" rel="stylesheet" />
+        <Header />
+        <Page {...pageProps} />
+      </main>
+    </RecoilRoot>
   )
 }
 

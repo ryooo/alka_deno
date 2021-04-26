@@ -1,20 +1,44 @@
-import React, { useMemo, CSSProperties } from 'react'
+import React, { useMemo, useState, useEffect, CSSProperties } from 'react'
+import { useRecoilValue } from '@recoil'
+import { SidebarConditionAtom } from '~/atoms/sidebar-condition-atom.ts'
 
 export function ResultCanvas() {
+  const getBaseWidth = () => {
+    return document.querySelector(".quizBase").clientWidth
+  }
+  const [baseWidth, setBaseWidth] = useState(0)
+  const sidebarCondition = useRecoilValue(SidebarConditionAtom)
+  const onResize = () => {
+    const baseWidth = getBaseWidth()
+    setBaseWidth(baseWidth)
+    const drawingCanvas = document.getElementById("resultCanvas")
+    drawingCanvas.width = viewWidth = Math.max(baseWidth, 500)
+    drawingCanvas.height = viewHeight = Math.max((baseWidth / 2), 500)
+  }
 
+  useEffect(() => {
+    // for debug
+    window.canvasShow = canvasShow
+    onResize()
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
+  useEffect(() => {
+    setTimeout(() => { onResize() }, 1)
+  }, [sidebarCondition])
   return useMemo(() => {
     const style: CSSProperties = {
       position: "absolute",
       margin: "auto",
-      width: "800px",
-      height: "800px",
       zIndex: 1,
       pointerEvents: "none",
     }
+    canvasHandler = null
     return (
-      <canvas id="result_canvas" style={style}></canvas>
+      <canvas id="resultCanvas" style={style}></canvas>
     )
-  }, [])
+  }, [baseWidth])
 }
 
 /**
@@ -69,9 +93,7 @@ class CanvasHandler {
   ctx: any
   objects: any
   constructor() {
-    const drawingCanvas = document.getElementById("result_canvas")
-    drawingCanvas.width = viewWidth = 400
-    drawingCanvas.height = viewHeight = 400
+    const drawingCanvas = document.getElementById("resultCanvas")
     this.ctx = drawingCanvas.getContext('2d')
     this.objects = []
     const loop = () => {

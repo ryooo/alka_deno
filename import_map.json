@@ -11,7 +11,8 @@
     "marked": "https://esm.sh/marked@2.0.1",
     "@pixi/filter-glitch": "https://esm.sh/@pixi/filter-glitch@4.0.0",
     "@pixi/filter-zoom-blur": "https://esm.sh/@pixi/filter-zoom-blur@4.0.0",
-    "pixi": "https://esm.sh/pixi.js-legacy@6.0.2"
+    "pixi": "https://esm.sh/pixi.js-legacy@6.0.2",
+    "@recoil": "https://esm.sh/recoil@0.1.2"
   },
   "scopes": {}
 }

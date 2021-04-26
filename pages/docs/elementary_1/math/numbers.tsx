@@ -8,6 +8,8 @@ import ImageContainer from '~/components/image-container.tsx'
 import { ResultCanvas, canvasShow } from '~/components/result-canvas.tsx'
 import { waitForKuromojiWorker } from '~/hooks/use-speech-recognition.ts'
 import { numberToAnsers, kanaToHira } from '~/shared/util.ts'
+import { useSetRecoilState } from '@recoil'
+import { SidebarConditionAtom } from '~/atoms/sidebar-condition-atom.ts'
 
 export default function PageMainContents({
   className,
@@ -15,13 +17,14 @@ export default function PageMainContents({
   className?: string,
 }) {
   const [questions, setQuestions] = useState(null)
+  const setSidebarCondition = useSetRecoilState(SidebarConditionAtom)
   useEffect(() => {
     canvasShow("OkMark")
   }, [])
 
   const createQuestions = useCallback(async () => {
     await waitForKuromojiWorker()
-    window.setSidebarCondition(false)
+    setSidebarCondition({ show: false })
     setQuestions(
       ld.shuffle(
         ld.times(10, (n) => {
@@ -61,18 +64,20 @@ export default function PageMainContents({
 
   return (
     <div className={className}>
-      <ResultCanvas />
-      {questions === null ? (
-        <QuizStart
-          description={(
-            <>
-              <h1>「スタート！」っていったら</h1>
-              <h1>がめんにすうじがひょうじされます。</h1>
-              <h1>ひょうじされたすうじをよみましょう。</h1>
-            </>)}
-          onStart={createQuestions} />) : (
-        <QuizManager questions={questions} />
-      )}
+      <div className="quizBase">
+        <ResultCanvas />
+        {questions === null ? (
+          <QuizStart
+            description={(
+              <>
+                <h1>「スタート！」っていったら</h1>
+                <h1>がめんにすうじがひょうじされます。</h1>
+                <h1>ひょうじされたすうじをよみましょう。</h1>
+              </>)}
+            onStart={createQuestions} />) : (
+          <QuizManager questions={questions} />
+        )}
+      </div>
     </div>
   )
 }

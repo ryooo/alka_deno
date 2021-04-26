@@ -2,6 +2,8 @@ import { useRouter } from 'framework/react'
 import util from 'aleph/shared/util.ts'
 import React, { ComponentType, Fragment, useEffect, useMemo, useState } from 'react'
 import NavList from '~/components/nav-list.tsx'
+import { useRecoilState } from '@recoil'
+import { SidebarConditionAtom } from '~/atoms/sidebar-condition-atom.ts'
 
 const ogImage = 'https://alephjs.org/twitter_card.jpg'
 const about = 'The Documentation of Aleph.js.'
@@ -12,10 +14,6 @@ interface Metadata {
   keywords?: string[]
 }
 
-window.setSidebarCondition = (display) => {
-  document.documentElement.style.setProperty('--sidebar-width', display ? "270px" : "0px")
-}
-
 export default function Docs({
   Page
 }: {
@@ -23,11 +21,16 @@ export default function Docs({
 }) {
   const [title, setTitle] = useState("")
   const [menuOpened, setMenuOpened] = useState(false)
+  const [sidebarCondition, setSidebarCondition] = useRecoilState(SidebarConditionAtom)
 
   useEffect(() => {
-    window.setSidebarCondition(true)
+    setSidebarCondition({ show: true })
     setTitle([Page?.meta.title, !Page?.meta.title.endsWith('alka') && 'alka'].filter(Boolean).join(' - '))
   }, [Page?.meta.title])
+
+  useEffect(() => {
+    document.documentElement.style.setProperty('--sidebar-width', sidebarCondition.show ? "270px" : "0px")
+  }, [sidebarCondition])
 
   return (
     <div className={['docs', menuOpened && 'scroll-lock'].filter(Boolean).join(' ')}>
@@ -48,7 +51,7 @@ export default function Docs({
         <link rel="stylesheet" href="~/style/docs.css" />
         <link rel="stylesheet" href="~/style/sidebar.css" />
       </head>
-      <aside>
+      {sidebarCondition.show && (<aside>
         <div className="search">
           <input
             placeholder="さがす..."
@@ -68,11 +71,9 @@ export default function Docs({
         <nav className={menuOpened ? 'open' : undefined}>
           <NavList setMenuOpened={setMenuOpened} />
         </nav>
-      </aside>
-      <div className="content">
-        {Page && <Page className={Page.meta.className} />}
-        <div className="bottom-space" />
-      </div>
+      </aside>)}
+      {Page && <Page className={Page.meta.className} />}
+      <div className="bottom-space" />
     </div >
   )
 }
