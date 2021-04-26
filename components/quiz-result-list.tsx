@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import { ld } from 'https://x.nest.land/deno-lodash@1.0.0/mod.ts'
 import { canvasShow } from '~/components/result-canvas.tsx'
+import SpeakButton from '~/components/speak-button.tsx'
 
 export default function TestResultList({
   questions,
@@ -29,7 +30,7 @@ export default function TestResultList({
                   return (
                     <tr className="hover:bg-gray-100" key={i}>
                       <td className="py-4 px-6 border-b border-gray-500">{question.quiz}</td>
-                      <td className="py-4 px-6 border-b border-gray-500">{question.typicalAnser}</td>
+                      <td className="py-4 px-6 border-b border-gray-500"><SpeakButton text={question.typicalAnser} size="small" />{question.typicalAnser}</td>
                       <td className="py-4 px-6 border-b border-gray-500">{scores[question.id]}<ruby data-ruby="てん">点</ruby></td>
                     </tr>
                   )
