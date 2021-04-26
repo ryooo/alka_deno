@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { waitForKuromojiWorker } from '~/hooks/use-speech-recognition.ts'
+import Button from '~/components/button.tsx'
 
 export default function TestStart({
   description,
@@ -31,9 +32,7 @@ export default function TestStart({
             <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
           </svg>
         </div>
-        <button className="transition duration-150 ease-in-out transform hover:scale-125 bg-blue-500 text-white font-bold w-3/5 py-2 rounded-full" onClick={onStart}>
-          スタート！
-        </button>
+        <Button strong onClick={onStart}>スタート！</Button>
       </div>
     </>
   )

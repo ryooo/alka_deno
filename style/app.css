@@ -39,3 +39,26 @@ ruby[data-ruby] rt
 {
 	display: none;
 }
+
+.generalButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  border: 2px solid black;
+  border-radius: 16px;
+  line-height: 1;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 0px 36px;
+  transition: all 0.21s ease-in-out 0s;
+  cursor: pointer;
+  color: black;
+  background: white;
+
+  &:hover {
+    color: white;
+    background: var(--theme-color);
+    border-color: var(--theme-color);
+  }
+}

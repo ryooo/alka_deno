@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 import { ld } from 'https://x.nest.land/deno-lodash@1.0.0/mod.ts'
 import { canvasShow } from '~/components/result-canvas.tsx'
 import SpeakButton from '~/components/speak-button.tsx'
+import Button from '~/components/button.tsx'
 
 export default function TestResultList({
   questions,
@@ -15,6 +16,7 @@ export default function TestResultList({
     const sortedQuestions = ld.sortBy(questions, [(q) => { return q.id }])
     return (
       <>
+        <Button strong ruby onClick={() => { location.reload() }}>もう<ruby data-ruby="いちど">一度</ruby></Button>
         <div className="w-2/3 mx-auto">
           <div className="bg-white shadow-md rounded my-6">
             <table className="text-left w-full border-collapse">
