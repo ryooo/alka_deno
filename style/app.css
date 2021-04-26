@@ -1,6 +1,7 @@
 :root {
   --header-height: 40px;
   --theme-color: #d63369;
+  --sidebar-width: 270px;
 }
 
 * {

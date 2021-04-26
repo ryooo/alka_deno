@@ -1,6 +1,7 @@
 import React, { useMemo, CSSProperties } from 'react'
 
 export function ResultCanvas() {
+
   return useMemo(() => {
     const style: CSSProperties = {
       position: "absolute",
@@ -60,8 +61,8 @@ const Point = function (x, y) {
   this.y = y || 0
 }
 // canvas settings
-const viewWidth = 800
-const viewHeight = 800
+let viewWidth = 0
+let viewHeight = 0
 const timeStep = (1 / 60)
 
 class CanvasHandler {
@@ -69,8 +70,8 @@ class CanvasHandler {
   objects: any
   constructor() {
     const drawingCanvas = document.getElementById("result_canvas")
-    drawingCanvas.width = viewWidth
-    drawingCanvas.height = viewHeight
+    drawingCanvas.width = viewWidth = 400
+    drawingCanvas.height = viewHeight = 400
     this.ctx = drawingCanvas.getContext('2d')
     this.objects = []
     const loop = () => {

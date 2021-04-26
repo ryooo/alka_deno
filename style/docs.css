@@ -10,7 +10,7 @@
 
   .commentaryPage, .testPage {
     padding-top: 50px;
-    padding-left: 360px;
+    padding-left: calc(var(--sidebar-width) * 1.1);
 
     @media screen and (max-width: 900px) {
       width: 90%;

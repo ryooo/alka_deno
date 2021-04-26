@@ -26,11 +26,7 @@ export default (): LoaderPlugin => {
       const { __content, ...meta } = safeLoadFront(decoder.decode(content))
       const html = marked.parse(__content)
       const framework = Deno.env.get('ALEPH_FRAMEWORK')
-      const props = {
-        id: util.isString(meta.id) ? meta.id : undefined,
-        className: util.isString(meta.id) ? meta.className : undefined,
-        style: util.isPlainObject(meta.style) ? meta.style : undefined,
-      }
+      const props = meta
 
       if (framework === 'react') {
         return {

@@ -16,6 +16,7 @@ export default function QuizManager({
   const [allCleared, setAllCleared] = useState(false)
   const [question, setQuestion] = useState(null)
   const [timeLimitPercent, setTimeLimitPercent] = useState(100)
+  const [shouldPulse, setShouldPulse] = useState(false)
 
   useEffect(() => {
     if (!questions) return
@@ -62,6 +63,7 @@ export default function QuizManager({
         const rest = tmpQuestion.limitTime - ((Date.now() - startAt) / 1000)
         percent = rest * 100 / tmpQuestion.limitTime
         setTimeLimitPercent(percent)
+        setShouldPulse(percent < 20)
         if (rest <= 0) {
           clearInterval(timerId)
           showResultAndOnNext(0)
@@ -81,7 +83,7 @@ export default function QuizManager({
       ) : (
         question === null ?
           (<>じゅんびちゅう...</>) :
-          (question.renderer({ question, timeLimitPercent }))
+          (question.renderer({ question, timeLimitPercent, shouldPulse }))
       )}
     </div>
   )

@@ -12,9 +12,22 @@ interface Metadata {
   keywords?: string[]
 }
 
-export default function Docs({ Page }: { Page?: ComponentType<any> & { meta: Metadata } }) {
+window.setSidebarCondition = (display) => {
+  document.documentElement.style.setProperty('--sidebar-width', display ? "270px" : "0px")
+}
+
+export default function Docs({
+  Page
+}: {
+  Page?: ComponentType<any> & { meta: Metadata }
+}) {
+  const [title, setTitle] = useState("")
   const [menuOpened, setMenuOpened] = useState(false)
-  const title = [Page?.meta.title, !Page?.meta.title.endsWith('alka') && 'alka'].filter(Boolean).join(' - ')
+
+  useEffect(() => {
+    window.setSidebarCondition(true)
+    setTitle([Page?.meta.title, !Page?.meta.title.endsWith('alka') && 'alka'].filter(Boolean).join(' - '))
+  }, [Page?.meta.title])
 
   return (
     <div className={['docs', menuOpened && 'scroll-lock'].filter(Boolean).join(' ')}>
