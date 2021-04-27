@@ -6,6 +6,7 @@ import QuizStart from '~/components/quiz-start.tsx'
 import { waitForKuromojiWorker } from '~/hooks/use-speech-recognition.ts'
 import { useSetRecoilState } from '@recoil'
 import { SidebarConditionAtom } from '~/atoms/sidebar-condition-atom.ts'
+import { pushQuizHistory } from '~/hooks/use-indexed-db.ts'
 
 export default function QuizManager({
   description,
@@ -38,6 +39,8 @@ export default function QuizManager({
     const tmpQuestion = questions[questionIndex]
     if (tmpQuestion === undefined) {
       setPhase("result")
+      const saveResult = async () => { await pushQuizHistory(location.pathname, scores) }
+      saveResult()
     } else {
       let percent = 100
       let cleared = false
