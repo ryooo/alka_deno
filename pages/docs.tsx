@@ -1,9 +1,10 @@
 import { useRouter } from 'framework/react'
 import util from 'aleph/shared/util.ts'
-import React, { ComponentType, Fragment, useEffect, useMemo, useState } from 'react'
+import React, { ComponentType, Fragment, useEffect, useMemo, useState, useRef } from 'react'
 import NavList from '~/components/nav-list.tsx'
 import { useRecoilState } from '@recoil'
 import { SidebarConditionAtom } from '~/atoms/sidebar-condition-atom.ts'
+import { BgmAtom } from '~/atoms/bgm-atom.ts'
 
 const ogImage = 'https://alephjs.org/twitter_card.jpg'
 const about = 'The Documentation of Aleph.js.'
@@ -22,15 +23,27 @@ export default function Docs({
   const [title, setTitle] = useState("")
   const [menuOpened, setMenuOpened] = useState(false)
   const [sidebarCondition, setSidebarCondition] = useRecoilState(SidebarConditionAtom)
+  const [bgm, setBgm] = useRecoilState(BgmAtom)
+  const audioRef = useRef()
 
   useEffect(() => {
     setSidebarCondition({ show: true })
     setTitle([Page?.meta.title, !Page?.meta.title.endsWith('alka') && 'alka'].filter(Boolean).join(' - '))
+    setBgm({ file: "/bgm/1.mp3" })
   }, [Page?.meta.title])
 
   useEffect(() => {
     document.documentElement.style.setProperty('--sidebar-width', sidebarCondition.show ? "270px" : "0px")
   }, [sidebarCondition])
+
+  useEffect(() => {
+    if (bgm.file && audioRef.current?.dataset.srcPath != bgm.file) {
+      audioRef.current.src = bgm.file
+      audioRef.current.dataset.srcPath = bgm.file
+      audioRef.current.loop = true
+      audioRef.current.play()
+    }
+  }, [bgm])
 
   return (
     <div className={['docs', menuOpened && 'scroll-lock'].filter(Boolean).join(' ')}>
@@ -73,6 +86,7 @@ export default function Docs({
         </nav>
       </aside>)}
       {Page && <Page className={Page.meta.className} />}
+      <audio ref={audioRef} />
       <div className="bottom-space" />
     </div >
   )

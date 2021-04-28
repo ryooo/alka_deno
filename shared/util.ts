@@ -9,7 +9,7 @@ export async function run(...cmd: string[]) {
   return new TextDecoder().decode(output)
 }
 
-export function numberToAnsers(num) {
+export function charToAnsers(num) {
   let ansers = []
   if (num === 1) {
     ansers.push("イチ")

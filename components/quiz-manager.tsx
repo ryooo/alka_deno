@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useCallback, createElement } from 'react'
+import { useSetRecoilState } from '@recoil'
 import QuizResultList from '~/components/quiz-result-list.tsx'
 import { ResultCanvas, canvasShow } from '~/components/result-canvas.tsx'
 import { useSpeechRecognition } from '~/hooks/use-speech-recognition.ts'
 import QuizStart from '~/components/quiz-start.tsx'
 import { waitForKuromojiWorker } from '~/hooks/use-speech-recognition.ts'
-import { useSetRecoilState } from '@recoil'
 import { SidebarConditionAtom } from '~/atoms/sidebar-condition-atom.ts'
 import { pushQuizHistory } from '~/hooks/use-indexed-db.ts'
+import { BgmAtom } from '~/atoms/bgm-atom.ts'
 
 export default function QuizManager({
   description,
@@ -25,9 +26,11 @@ export default function QuizManager({
   const [question, setQuestion] = useState(null)
   const [timeLimitPercent, setTimeLimitPercent] = useState(100)
   const [shouldPulse, setShouldPulse] = useState(false)
+  const setBgm = useSetRecoilState(BgmAtom)
 
   const onStart = useCallback(async () => {
     await waitForKuromojiWorker()
+    setBgm({ file: "/bgm/11.mp3" })
     setSidebarCondition({ show: false })
     setPhase("quiz")
     setQuestionIndex(0)
@@ -55,12 +58,13 @@ export default function QuizManager({
         } else {
           canvasShow("NgMark")
         }
-        scores[tmpQuestion.id] = score
+        if (!scores[tmpQuestion.id]) scores[tmpQuestion.id] = []
+        scores[tmpQuestion.id].push(score)
         setScores(scores)
         setTimeout(() => { setQuestionIndex(questionIndex + 1) }, 500)
       }
       window.kuromojiWorker.onmessage = (message) => {
-        if (tmpQuestion.score) return
+        if (cleared) return
         if (tmpQuestion.test(message.data.anser)) {
           clearInterval(timerId)
           recognition.reset()

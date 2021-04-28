@@ -4,6 +4,18 @@ import util from 'https://deno.land/x/aleph@v0.3.0-alpha.30/shared/util.ts'
 
 const navMenu = [
   {
+    name: 'ようじ',
+    items: [
+      {
+        title: 'かず',
+        pathname: '/docs/nursery/math',
+        submenu: [
+          { title: '3までのかず', pathname: '/kazu_under3' },
+        ],
+      },
+    ],
+  },
+  {
     name: '小学1年生',
     items: [
       { title: 'はじめに', pathname: '/docs/elementary_1' },
@@ -12,7 +24,6 @@ const navMenu = [
         pathname: '/docs/elementary_1/math',
         submenu: [
           { title: 'かず', pathname: '/numbers' },
-          { title: 'たしざん', pathname: '/plus' },
         ],
       },
     ],

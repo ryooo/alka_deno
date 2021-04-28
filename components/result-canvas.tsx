@@ -127,8 +127,12 @@ export const canvasShow = (args) => {
   if (!canvasHandler) canvasHandler = new CanvasHandler()
   if (!Array.isArray(args)) args = [args]
   for (var argsI = 0; argsI < args.length; argsI++) {
-    const opt = Array.isArray(args[argsI]) ? args[argsI][1] : {}
-    switch (Array.isArray(args[argsI]) ? args[argsI][0] : args[argsI]) {
+    const opt = args[argsI]
+    switch (opt.type || opt) {
+      case "playSe":
+        const audio = new Audio(opt.se)
+        audio.play()
+        break
       case "NgMark":
         canvasHandler.addObject(new NgMark(viewWidth * 0.5, viewHeight * 0.5))
         break

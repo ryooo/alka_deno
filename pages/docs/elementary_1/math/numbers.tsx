@@ -4,7 +4,7 @@ import { getTitle } from '~/components/nav-list.tsx'
 import QuizManager from '~/components/quiz-manager.tsx'
 import BarProgress from '~/components/bar-progress.tsx'
 import ImageContainer from '~/components/image-container.tsx'
-import { numberToAnsers, kanaToHira } from '~/shared/util.ts'
+import { charToAnsers, kanaToHira } from '~/shared/util.ts'
 import SpeakButton from '~/components/speak-button.tsx'
 
 export default function PageMainContents({
@@ -19,7 +19,7 @@ export default function PageMainContents({
       ld.shuffle(
         ld.times(10, (n) => {
           const num = n + 1
-          const ansers = numberToAnsers(num)
+          const ansers = charToAnsers(num)
           return {
             id: num,
             quiz: num,
@@ -59,7 +59,7 @@ export default function PageMainContents({
         <QuizManager questions={questions} description={(
           <div ref={descriptionRef}>
             <h1>「スタート！」っていったら</h1>
-            <h1>がめんにすうじがひょうじされます。</h1>
+            <h1>すうじがひょうじされます。</h1>
             <h1>ひょうじされたすうじをよみましょう。
               <SpeakButton textRef={descriptionRef} />
             </h1>

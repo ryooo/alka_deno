@@ -1,9 +1,11 @@
 import React, { useMemo, useEffect, useState } from 'react'
+import { useSetRecoilState } from '@recoil'
 import { ld } from 'https://x.nest.land/deno-lodash@1.0.0/mod.ts'
 import { canvasShow } from '~/components/result-canvas.tsx'
 import SpeakButton from '~/components/speak-button.tsx'
 import Button from '~/components/button.tsx'
 import { findQuizHistory } from '~/hooks/use-indexed-db.ts'
+import { BgmAtom } from '~/atoms/bgm-atom.ts'
 
 export default function TestResultList({
   questions,
@@ -13,16 +15,19 @@ export default function TestResultList({
   scores: any,
 }) {
   const [histories, setHistories] = useState([])
+  const setBgm = useSetRecoilState(BgmAtom)
   useEffect(() => {
-    canvasShow("Particles")
+    setBgm({ file: "/bgm/21.mp3" })
+    canvasShow(["Particles", { type: "playSe", se: "/se/clear.mp3" }])
     const loadHistories = async () => {
       const rows = await findQuizHistory(location.pathname)
       setHistories(rows.histories)
     }
     loadHistories()
   }, [scores])
-  const displayScore = (score) => {
-    if (score === undefined) return ""
+  const displayScore = (scores) => {
+    if (scores === undefined) return ""
+    const score = ld.mean(scores)
     if (score > 80) {
       return (<svg viewBox="0 0 448 512" style={{ width: "21px", color: "red" }}>
         <path fill="red" d="M 350.85 129 c 25.97 4.67 47.27 18.67 63.92 42 c 14.65 20.67 24.64 46.67 29.96 78 c 4.67 28.67 4.32 57.33 -1 86 c -7.99 47.33 -23.97 87 -47.94 119 c -28.64 38.67 -64.59 58 -107.87 58 c -10.66 0 -22.3 -3.33 -34.96 -10 c -8.66 -5.33 -18.31 -8 -28.97 -8 s -20.3 2.67 -28.97 8 c -12.66 6.67 -24.3 10 -34.96 10 c -43.28 0 -79.23 -19.33 -107.87 -58 c -23.97 -32 -39.95 -71.67 -47.94 -119 c -5.32 -28.67 -5.67 -57.33 -1 -86 c 5.32 -31.33 15.31 -57.33 29.96 -78 c 16.65 -23.33 37.95 -37.33 63.92 -42 c 15.98 -2.67 37.95 -0.33 65.92 7 c 23.97 6.67 44.28 14.67 60.93 24 c 16.65 -9.33 36.96 -17.33 60.93 -24 c 27.98 -7.33 49.96 -9.67 65.94 -7 z z"></path>
@@ -39,7 +44,10 @@ export default function TestResultList({
     return displayScore(histories[index].scores[questionId])
   }
   return useMemo(() => {
-    const sortedQuestions = ld.sortBy(questions, [(q) => { return q.id }])
+    let distinctQuestions = {}
+    for (let i = 0; i < questions.length; i++) {
+      distinctQuestions[questions[i].id] = questions[i]
+    }
     return (
       <>
         <Button strong ruby onClick={() => { location.reload() }}>もう<ruby data-ruby="いちど">一度</ruby></Button>
@@ -57,7 +65,7 @@ export default function TestResultList({
                 </tr>
               </thead>
               <tbody>
-                {ld.map(sortedQuestions, (question, i) => {
+                {ld.map(distinctQuestions, (question, i) => {
                   return (
                     <tr className="hover:bg-gray-100" key={i}>
                       <td className="py-4 px-6 border-b border-gray-500">{question.quiz}</td>

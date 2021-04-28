@@ -17,3 +17,6 @@ aleph build
 ```
 
 curl -fsSL https://deno.land/x/install/install.sh | sh -s v1.8.3 && /vercel/.deno/bin/deno run -A https://deno.land/x/aleph@v0.3.0-alpha.30/cli.ts build
+
+https://musmus.main.jp/info.html
+
