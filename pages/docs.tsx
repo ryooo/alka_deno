@@ -41,6 +41,7 @@ export default function Docs({
       audioRef.current.src = bgm.file
       audioRef.current.dataset.srcPath = bgm.file
       audioRef.current.loop = true
+      audioRef.current.volume = 0.3
       audioRef.current.play()
     }
   }, [bgm])

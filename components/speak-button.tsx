@@ -3,17 +3,21 @@ import React, { useCallback, useMemo, useEffect, useState } from 'react'
 export default function SpeakButton({
   text,
   textRef,
+  textQuery,
   onSpeakEnd,
   size,
 }) {
   const [speechSynthesis, setSpeechSynthesis] = useState(null)
+  const [speakText, setSpeakText] = useState()
   const speak = useCallback(() => {
+    if (!speakText) return
+
     const SpeechSynthesisUtterance = window.webkitSpeechSynthesisUtterance || window.SpeechSynthesisUtterance
     const speechSynthesis = window.webkitSpeechSynthesis || window.speechSynthesis
     const voice = speechSynthesis.getVoices()
     const u = new SpeechSynthesisUtterance()
     u.voice = voice.find((v) => { v.lang == "ja-JP" })
-    u.text = text || textRef.current.innerText
+    u.text = speakText
     u.lang = "ja-JP"
     u.rate = 1.0
 
@@ -21,7 +25,11 @@ export default function SpeakButton({
     speechSynthesis.speak(u)
     console.log("speaking: " + u.text)
     u.addEventListener("end", onSpeakEnd)
-  }, [text, textRef, onSpeakEnd])
+  }, [speakText, onSpeakEnd])
+
+  useEffect(() => {
+    setSpeakText(text || textRef?.current.innerText || document.querySelector(textQuery).innerText)
+  }, [text, textRef, textQuery])
 
   useEffect(() => {
     return () => {

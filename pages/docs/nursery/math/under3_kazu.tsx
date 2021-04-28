@@ -16,10 +16,10 @@ export default function PageMainContents({
     setQuestions([
       generateCharReading(1, 1),
       generateCharReading(2, 2),
-      // generateCharReading(3, 3),
-      // generateCharReading(1, 1),
-      // generateCharReading(2, 2),
-      // generateCharReading(3, 3),
+      generateCharReading(3, 3),
+      generateCharReading(1, 1),
+      generateCharReading(2, 2),
+      generateCharReading(3, 3),
     ])
   }, [])
 
@@ -28,7 +28,7 @@ export default function PageMainContents({
       <div className="quizBase">
         <QuizManager questions={questions} description={(
           <div ref={descriptionRef}>
-            <h1>1　2　3</h1>
+            <h1>１　２　３</h1>
             <h1>
               よめるかな？
               <SpeakButton textRef={descriptionRef} />
