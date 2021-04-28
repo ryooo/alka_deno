@@ -73,6 +73,26 @@ const navMenu = [
       },
     ],
   },
+  {
+    name: '小学2年生',
+    items: [
+      { title: 'はじめに', pathname: '/docs/elementary_2' },
+      {
+        title: 'かけざん',
+        pathname: '/docs/elementary_2/multiple',
+        submenu: [
+          { title: '2のだん', pathname: '/multiple_2' },
+          { title: '3のだん', pathname: '/multiple_3' },
+          { title: '4のだん', pathname: '/multiple_4' },
+          { title: '5のだん', pathname: '/multiple_5' },
+          { title: '6のだん', pathname: '/multiple_6' },
+          { title: '7のだん', pathname: '/multiple_7' },
+          { title: '8のだん', pathname: '/multiple_8' },
+          { title: '9のだん', pathname: '/multiple_9' },
+        ],
+      },
+    ],
+  },
 ]
 
 export default function NavList({
