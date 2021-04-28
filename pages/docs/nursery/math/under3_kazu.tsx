@@ -3,7 +3,7 @@ import { ld } from 'https://x.nest.land/deno-lodash@1.0.0/mod.ts'
 import { getTitle } from '~/components/nav-list.tsx'
 import QuizManager from '~/components/quiz-manager.tsx'
 import SpeakButton from '~/components/speak-button.tsx'
-import { generateCharReading } from '~/questions/char_reading.tsx'
+import { generateNumberQuiz } from '~/questions/number_quiz.tsx'
 
 export default function PageMainContents({
   className,
@@ -14,12 +14,12 @@ export default function PageMainContents({
   const descriptionRef = useRef()
   useEffect(() => {
     setQuestions([
-      generateCharReading(1, 1),
-      generateCharReading(2, 2),
-      generateCharReading(3, 3),
-      generateCharReading(1, 1),
-      generateCharReading(2, 2),
-      generateCharReading(3, 3),
+      generateNumberQuiz(1, 1),
+      generateNumberQuiz(2, 2),
+      generateNumberQuiz(3, 3),
+      generateNumberQuiz(1, 1),
+      generateNumberQuiz(2, 2),
+      generateNumberQuiz(3, 3),
     ])
   }, [])
 

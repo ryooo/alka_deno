@@ -21,7 +21,9 @@ export default function TestResultList({
     canvasShow(["Particles", { type: "playSe", se: "/se/clear.mp3" }])
     const loadHistories = async () => {
       const rows = await findQuizHistory(location.pathname)
-      setHistories(rows.histories)
+      if (rows) {
+        setHistories(rows.histories)
+      }
     }
     loadHistories()
   }, [scores])

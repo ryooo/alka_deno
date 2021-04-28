@@ -1,3 +1,5 @@
+import { ld } from 'https://x.nest.land/deno-lodash@1.0.0/mod.ts'
+
 export async function run(...cmd: string[]) {
   const p = Deno.run({
     cmd,
@@ -10,8 +12,37 @@ export async function run(...cmd: string[]) {
 }
 
 export function charToAnsers(num) {
+  let ansers = charToAnsersUnder99(num)
+  return ansers
+}
+
+export function charToAnsersUnder99(num) {
+  const first = Math.floor(num / 1) % 10
+  const firstAnsers = charToAnsersUner9(first)
+  if (num < 10) return firstAnsers
+
+  const second = Math.floor(num / 10) % 10
+  let secondAnsers = []
+  ld.forEach(charToAnsersUner9(second), (ans) => {
+    secondAnsers = secondAnsers.concat([ans + "ジュウ", ans + "ジュー"])
+  })
+
+  if (first == 0) {
+    return secondAnsers.concat([num + ""])
+  }
+
+  return ld.flatten(ld.map(firstAnsers, (firstAnser) => {
+    return ld.map(secondAnsers, (secondAnser) => {
+      return secondAnser + firstAnser
+    })
+  })).concat([num + ""])
+}
+
+export function charToAnsersUner9(num) {
   let ansers = []
-  if (num === 1) {
+  if (num === 0) {
+    ansers.push("ゼロ")
+  } else if (num === 1) {
     ansers.push("イチ")
   } else if (num === 2) {
     ansers.push("ニ", "ニー")
@@ -28,9 +59,7 @@ export function charToAnsers(num) {
   } else if (num === 8) {
     ansers.push("ハチ")
   } else if (num === 9) {
-    ansers.push("キュウ")
-  } else if (num === 10) {
-    ansers.push("ジュウ")
+    ansers.push("キュウ", "キュ", "キュー")
   }
   ansers.push(num + "")
   return ansers

@@ -25,7 +25,6 @@ export default function QuizManager({
   const [phase, setPhase] = useState("description")
   const [question, setQuestion] = useState(null)
   const [timeLimitPercent, setTimeLimitPercent] = useState(100)
-  const [shouldPulse, setShouldPulse] = useState(false)
   const setBgm = useSetRecoilState(BgmAtom)
 
   const onStart = useCallback(async () => {
@@ -65,6 +64,7 @@ export default function QuizManager({
       }
       window.kuromojiWorker.onmessage = (message) => {
         if (cleared) return
+        console.log("ans : " + message.data.anser)
         if (tmpQuestion.test(message.data.anser)) {
           clearInterval(timerId)
           recognition.reset()
@@ -79,7 +79,6 @@ export default function QuizManager({
         const rest = tmpQuestion.limitTime - ((Date.now() - startAt) / 1000)
         percent = rest * 100 / tmpQuestion.limitTime
         setTimeLimitPercent(percent)
-        setShouldPulse(percent < 20)
         if (rest <= 0) {
           clearInterval(timerId)
           showResultAndOnNext(0)
@@ -97,7 +96,7 @@ export default function QuizManager({
       {phase == "quiz" && (
         question === null ?
           (<><ruby data-ruby="じゅんびちゅう">準備中</ruby>...</>) :
-          (question.renderer({ question, timeLimitPercent, shouldPulse }))
+          (question.renderer({ question, timeLimitPercent }))
       )}
       {phase == "result" && (<QuizResultList questions={questions} scores={scores} />)}
     </div>

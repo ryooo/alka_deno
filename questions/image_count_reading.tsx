@@ -34,12 +34,13 @@ export const generateImageCountReading = (id, num, opt = {}) => {
     limitTime: opt.limitTime || 20,
     typicalAnser: kanaToHira(ansers[0]),
     renderer: (props) => {
+      const shouldPulse = props.timeLimitPercent < 30
       return (
         <>
           <BarProgress percent={props.timeLimitPercent} />
-          <div className={props.shouldPulse ? "animate-pulse quizFont" : "quizFont"}>
+          <div className={shouldPulse ? "animate-pulse quizFont" : "quizFont"}>
             <span id="quizText" style={{ fontSize: 2 + "rem" }}>
-              クッキーはいくつある？
+              クッキーがいくつあるか、わかるかな？
             </span>
             <SpeakButton textQuery="#quizText" />
             <ImageContainer imageName="cookies" count={props.question.quiz} perRow={5} />

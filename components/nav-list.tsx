@@ -28,7 +28,10 @@ const navMenu = [
         title: 'さんすう',
         pathname: '/docs/elementary_1/math',
         submenu: [
-          { title: 'かず', pathname: '/numbers' },
+          { title: '10までのたしざん', pathname: '/plus_under10' },
+          { title: '＋１０のたしざん', pathname: '/plus_10' },
+          { title: '2けたと1けたのたしざん', pathname: '/plus_under20_under10' },
+          { title: '2けたどうしのたしざん', pathname: '/plus_under20_under20' },
         ],
       },
     ],
