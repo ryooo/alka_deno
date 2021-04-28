@@ -71,3 +71,10 @@ export function kanaToHira(str) {
     return String.fromCharCode(chr)
   })
 }
+
+export function hiraToKana(str) {
+  return str.replace(/[\u3041-\u3096]/g, function (match) {
+    var chr = match.charCodeAt(0) + 0x60
+    return String.fromCharCode(chr)
+  })
+}

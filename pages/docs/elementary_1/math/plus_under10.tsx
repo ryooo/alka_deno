@@ -2,9 +2,6 @@ import React, { useState, useRef, useEffect } from 'react'
 import { ld } from 'https://x.nest.land/deno-lodash@1.0.0/mod.ts'
 import { getTitle } from '~/components/nav-list.tsx'
 import QuizManager from '~/components/quiz-manager.tsx'
-import BarProgress from '~/components/bar-progress.tsx'
-import ImageContainer from '~/components/image-container.tsx'
-import { charToAnsers, kanaToHira } from '~/shared/util.ts'
 import SpeakButton from '~/components/speak-button.tsx'
 import { generateNumberQuiz } from '~/questions/number_quiz.tsx'
 
@@ -73,7 +70,7 @@ export default function PageMainContents({
         <QuizManager questions={questions} description={(
           <div ref={descriptionRef}>
             <h1>10までのたしざん</h1>
-            <h1>たしざんに<ruby data-ruby="こた">答</ruby>えましょう
+            <h1>たしざんに<ruby data-ruby="こた">答</ruby>えよう
               <SpeakButton textRef={descriptionRef} />
             </h1>
           </div>
