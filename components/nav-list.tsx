@@ -41,13 +41,30 @@ const navMenu = [
     items: [
       { title: 'はじめに', pathname: '/docs/elementary_1' },
       {
-        title: 'さんすう',
-        pathname: '/docs/elementary_1/math',
+        title: 'かんじ',
+        pathname: '/docs/elementary_1/kanji',
+        submenu: [
+          { title: 'おくりがなのない よみかた(1)', pathname: '/onkun_1' },
+          { title: 'おくりがなのない よみかた(2)', pathname: '/onkun_2' },
+          { title: 'おくりがなのない よみかた(3)', pathname: '/onkun_3' },
+          { title: 'おくりがなのある よみかた(1)', pathname: '/okurigana_1' },
+          { title: 'おくりがなのある よみかた(2)', pathname: '/okurigana_2' },
+        ],
+      },
+      {
+        title: 'たしざん',
+        pathname: '/docs/elementary_1/plus',
         submenu: [
           { title: '10までのたしざん', pathname: '/plus_under10' },
           { title: '＋１０のたしざん', pathname: '/plus_10' },
           { title: '2けたと1けたのたしざん', pathname: '/plus_under20_under10' },
           { title: '2けたどうしのたしざん', pathname: '/plus_under20_under20' },
+        ],
+      },
+      {
+        title: 'ひきざん',
+        pathname: '/docs/elementary_1/minus',
+        submenu: [
           { title: '10までのひきざん', pathname: '/minus_under10' },
           { title: '-１０のひきざん', pathname: '/minus_10' },
           { title: 'くりさがらないひきざん', pathname: '/minus_under20_under10' },
