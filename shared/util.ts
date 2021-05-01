@@ -20,6 +20,7 @@ export function charToAnsersUnder99(num) {
   const first = Math.floor(num / 1) % 10
   const firstAnsers = charToAnsersUner9(first)
   if (num < 10) return firstAnsers
+  if (num == 10) return ["ジュウ", "ジュー", "10", "G"]
 
   const second = Math.floor(num / 10) % 10
   let secondAnsers = []
@@ -49,7 +50,7 @@ export function charToAnsersUner9(num) {
   } else if (num === 3) {
     ansers.push("サン")
   } else if (num === 4) {
-    ansers.push("ヨン", "シー")
+    ansers.push("ヨン", "シー", "シ")
   } else if (num === 5) {
     ansers.push("ゴ", "ゴー")
   } else if (num === 6) {
@@ -59,7 +60,7 @@ export function charToAnsersUner9(num) {
   } else if (num === 8) {
     ansers.push("ハチ")
   } else if (num === 9) {
-    ansers.push("キュウ", "キュ", "キュー")
+    ansers.push("キュウ", "キュ", "キュー", "ク")
   }
   ansers.push(num + "")
   return ansers
